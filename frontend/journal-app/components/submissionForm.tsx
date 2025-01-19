@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Modal,
   View,
@@ -18,30 +18,16 @@ interface SubmissionFormProps {
   date: string;
 }
 
-const SubmissionForm: React.FC<SubmissionFormProps> = ({
-  visible,
-  onClose,
-  date,
-}) => {
+const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date }) => {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (visible && date) {
-      setLoading(true);
-      fetch(`http://10.19.129.35:3001/retrieve?date=${date}`)
-        .then((res) => res.json())
-        .then((data) => setText(data?.entry || ""))
-        .catch(() => Alert.alert("Error", "Failed to retrieve entry"))
-        .finally(() => setLoading(false));
-    }
-  }, [visible, date]);
-
-  const handleSubmit = async () => {
+  async function handleSubmit() {
     if (!text.trim()) {
       Alert.alert("Validation Error", "Text input cannot be empty");
       return;
     }
+    setLoading(true);
     try {
       const response = await fetch("http://10.19.129.35:3001/analyze", {
         method: "POST",
@@ -56,32 +42,28 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
         Alert.alert("Error", "Submission failed");
       }
     } catch {
-      Alert.alert("Error", "An error occurred during submission");
+      Alert.alert("Error", "Submission request failed");
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
-  const handleClose = () => {
+  function handleClose() {
     setText("");
     onClose();
-  };
+  }
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={handleClose}
-    >
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
-
           {loading ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#fff" />
-              <Text style={styles.loadingText}>Loading...</Text>
+              <ActivityIndicator size="large" color="#34a899" />
+              <Text style={styles.loadingText}>Submitting...</Text>
             </View>
           ) : (
             <>
@@ -93,9 +75,7 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
                 multiline
               />
               <Button title="Submit" onPress={handleSubmit} />
-              <View style={styles.cancel}>
-                <Button title="Cancel" color="red" onPress={handleClose} />
-              </View>
+              <Button title="Cancel" color="red" onPress={handleClose} />
             </>
           )}
         </View>
@@ -113,7 +93,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "80%",
-    height: Dimensions.get("window").height * 0.8,
+    height: Dimensions.get("window").height * 0.4,
     backgroundColor: "black",
     borderRadius: 10,
     padding: 20,
@@ -121,23 +101,13 @@ const styles = StyleSheet.create({
     elevation: 5,
     position: "relative",
   },
-  input: {
-    height: 400,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
-    backgroundColor: "#f9f9f9",
-    marginBottom: 20,
-  },
   closeButton: {
     position: "absolute",
-    top: 12,
-    right: 12,
+    top: 10,
+    right: 10,
     backgroundColor: "red",
-    width: 25,
-    height: 25,
+    width: 30,
+    height: 30,
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
@@ -155,8 +125,15 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginTop: 10,
   },
-  cancel: {
-    marginTop: 5,
+  input: {
+    height: 100,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+    marginBottom: 20,
   },
 });
 

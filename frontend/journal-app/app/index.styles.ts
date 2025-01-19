@@ -24,6 +24,16 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: "center",
   },
+  loadingButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  loadingText: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: "#555",
+  },
   suggestionContainer: {
     marginTop: 20,
     padding: 20,
