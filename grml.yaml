@@ -20,3 +20,10 @@ commands:
                     curl -X POST http://localhost:3001/analyze \
                         -H "Content-Type: application/json" \
                         -d '{"text": "Today was amazing! I went out with friends, and we laughed and joked all day long." }'
+
+            test:
+                help: post a test message
+                exec: |
+                    curl -X POST http://localhost:3001/analyze \
+                        -H "Content-Type: application/json" \
+                        -d '{"text": "I suck, this sucks, everything sucks" }'

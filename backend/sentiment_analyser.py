@@ -4,9 +4,12 @@ from openai import OpenAI
 import argparse
 import sys
 
+import database_manager
+
 
 secret_manager = SecretManager()
 secret_manager.init_secret("OpenAI")
+secret_manager.init_secret("MongoDB_nwHacks")
 
 
 class SentimentAnalyser:
@@ -68,7 +71,10 @@ def main():
         print(f"Error occurred during sentiment analysis: {e}", file=sys.stderr)
         sys.exit(1)
 
-
+    mongodb_key = secret_manager.get_secret("MongoDB_nwHacks")
+    dbm = database_manager.DatabaseManager(mongodb_key)
+    dbm.add_entry("2022-02-22", args.text, result)
+    dbm.close_connection()
 
 
 if __name__ == "__main__":
