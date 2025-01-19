@@ -48,45 +48,68 @@ const Calendar = () => {
     setCurrentDate(newDate);
   };
 
-  const renderDay = (day: number | null) => {
+  const renderDay = (day: number | null, index: string) => {
     const sentiment = day !== null ? monthData[day]?.sentiment : null;
     let backgroundColor = '#ccc'; // Default color for days without sentiment data
+    let borderColor = '#ccc'; // Default color for days without sentiment data
 
     if (sentiment === -1) backgroundColor = '#ffcccc'; // Negative: red
     if (sentiment === 0) backgroundColor = '#ffffcc'; // Neutral: yellow
     if (sentiment === 1) backgroundColor = '#ccffcc'; // Positive: green
-    if (day === null) backgroundColor = 'transparent'; // Empty day
-
+    if (day === null) { // Empty day
+        backgroundColor = 'transparent';
+        borderColor = 'transparent';
+    }
     return (
-      <TouchableOpacity key={day} style={[styles.day, { backgroundColor }]}>
+      <TouchableOpacity key={index} style={[styles.day, { backgroundColor, borderColor }]}>
         <Text>{day}</Text>
       </TouchableOpacity>
     );
   };
 
+  const renderWeekday = (day: string) => {
+    return (
+      <View key={day} style={[styles.day, { backgroundColor: 'transparent', borderColor: 'transparent' }]}>
+        <Text>{day}</Text>
+      </View>
+    );
+  }
+
   const renderCalendar = () => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const daysInMonth = getDaysInMonth(year, month);
-    const firstDayNameInMonth = getFirstDayNameInMonth(year, month);
+    const firstDayNameInMonth = getFirstDayNameInMonth(year, month);    
+    const days = []; // Generate days for the month
+    var nullCount = 0;
 
-    // Generate days for the month
-    const days = [];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    dayNames.forEach((dayName) => {
+        days.push(renderWeekday(dayName));
+    });
+
     for (let i = 1; i <= firstDayNameInMonth; i++) {
-        days.push(renderDay(null));
+        days.push(renderDay(null, "null" + nullCount));
+        nullCount++;
     }
     for (let i = 1; i <= daysInMonth; i++) {
-      days.push(renderDay(i));
+      days.push(renderDay(i, i.toString()));
     }
     
     const endPadding = 7 - (days.length % 7);
     if (endPadding < 7) {
         for (let i = 1; i <= endPadding; i++) {
-            days.push(renderDay(null));
+            days.push(renderDay(null, "null" + nullCount));
+            nullCount++;
         }
     }
 
-    return <View style={styles.calendarGrid}>{days}</View>;
+    return (
+      <View style={styles.calendarGrid}>
+        {days}
+      </View>
+    );
   };
 
   const renderLoading = () => {
@@ -96,7 +119,6 @@ const Calendar = () => {
       </View>
     );
   };
-
 
   return (
     <View style={styles.container}>
@@ -144,7 +166,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 2,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#ccc',
     borderRadius: 5,
   },
   loadingContainer: {
