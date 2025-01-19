@@ -11,14 +11,14 @@ class SentimentAnalyzer:
                 {
                     "role": "system",
                     "content": (
-                        "You are a sentiment analysis assistant tasked with labeling "
-                        "the overall mood or feeling of a user's diary entry. Your "
-                        "output must strictly be **one** of the following single words:\n"
-                        "Joyful, Sad, Productive, Tired, Okay, Angry.\n\n"
-                        "Carefully read the user's diary entry, determine which word "
-                        "best reflects the overall sentiment from the available choices, "
-                        "and respond **only** with that single word. Provide no additional "
-                        "commentary or explanation."
+                        """You are a sentiment analysis assistant tasked with labeling 
+                        the overall mood or feeling of a user's diary entry. Your 
+                        output must strictly be **one** of the following single words:\n
+                        Joyful, Sad, Productive, Tired, Okay, Angry.\n\n
+                        Carefully read the user's diary entry, determine which word 
+                        best reflects the overall sentiment from the available choices, 
+                        and respond **only** with that single word. Provide no additional 
+                        commentary or explanation."""
                     )
                 },
                 {
