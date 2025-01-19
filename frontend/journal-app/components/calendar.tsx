@@ -17,6 +17,7 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [monthData, setMonthData] = useState<{ [key: number]: { sentiment: number } }>({});
   const [loading, setLoading] = useState(true);
+  const buttonColor = "#34a899";
 
   useEffect(() => {
     // Fetch data for the current month when the component mounts or currentDate changes
@@ -122,12 +123,12 @@ const Calendar = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>
-        {currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}
-      </Text>
       <View style={styles.buttonRow}>
-        <Button title="Previous" onPress={handlePreviousMonth} />
-        <Button title="Next" onPress={handleNextMonth} />
+        <Button color={buttonColor} title="Prev" onPress={handlePreviousMonth} />
+        <Text style={styles.header}>
+          {currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}
+        </Text>
+        <Button color={buttonColor} title="Next" onPress={handleNextMonth} />
       </View>
       {loading ? (
         <Text>{renderLoading()}</Text>
@@ -147,11 +148,13 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     textAlign: 'center',
-    marginBottom: 20,
+    flex: 1, // This will make the text take up all available space
+    fontWeight: 'bold',
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between', // Space buttons evenly
+    alignItems: 'center', // Vertically align items in the center
     marginBottom: 20,
   },
   calendarGrid: {
