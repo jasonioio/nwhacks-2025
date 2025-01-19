@@ -11,7 +11,7 @@ export default function Index() {
         justifyContent: "center",
         backgroundColor: 'white',
         padding: '5%',
-        gap: '5%'
+        gap: '5%',
       }}
     >
       <Header/>

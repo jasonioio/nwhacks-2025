@@ -33,13 +33,17 @@ const Header = () => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingBottom: '5%'
+        paddingBottom: '8%',
+        paddingTop: '5%',
+        borderColor: 
     },
     header: {
         fontSize: 45,
+        fontFamily: 'Abril Fatface'
     },
     subheader: {
         fontSize: 20,
+        color: '#666666'
     }
 })
 

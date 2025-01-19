@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     flex: 1, // This will make the text take up all available space
-    fontWeight: 'bold',
+    fontFamily: 'Abril Fatface'
   },
   buttonRow: {
     flexDirection: 'row',
