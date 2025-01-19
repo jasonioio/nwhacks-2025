@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
   navBar: {
     width: "100%",
     paddingVertical: 15,
-    backgroundColor: "#B3C8CF", // Accent1
+    backgroundColor: "#B3C8CF",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 10,
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
   navBarTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#F1F0E8", // White text
+    color: "#F1F0E8",
   },
   mainContainer: {
     flexGrow: 1,
@@ -61,7 +61,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     borderColor: "#ddd",
-    backgroundColor: "#E5E1DA", // Accent2
+    backgroundColor: "#E5E1DA",
     width: width * 0.8,
     alignSelf: "center",
     shadowColor: "#000",

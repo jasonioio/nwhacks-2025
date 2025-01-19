@@ -61,7 +61,6 @@ export default function Index() {
 
   return (
     <View style={styles.screenWrapper}>
-      {/* NavBar */}
       <View style={styles.navBar}>
         <Text style={styles.navBarTitle}>ThoughtStream 📖</Text>
       </View>

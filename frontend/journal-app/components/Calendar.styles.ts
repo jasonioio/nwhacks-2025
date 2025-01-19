@@ -25,6 +25,18 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
+  arrowButton: {
+    padding: 4,
+  },
+  loadingContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 8,
+    color: "#333",
+  },
   calendarGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -39,10 +51,5 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
-  },
-  loadingContainer: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });

@@ -1,13 +1,16 @@
-import { Stack } from "expo-router";
+import React from "react";
+import { Slot } from "expo-router";
+import { useFonts } from "expo-font";
+import AppLoading from "expo-app-loading";
 
-export default function RootLayout() {
-  return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="index" />
-    </Stack>
-  );
+export default function Layout() {
+  const [fontsLoaded] = useFonts({
+    Verve: require("../assets/fonts/Verve.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
+  return <Slot />;
 }

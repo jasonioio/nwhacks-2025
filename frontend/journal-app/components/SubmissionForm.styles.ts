@@ -1,21 +1,18 @@
-import { StyleSheet, Dimensions } from "react-native";
-
-const { height } = Dimensions.get("window");
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
     justifyContent: "center",
     alignItems: "center",
   },
   modalContainer: {
     width: "80%",
-    height: height * 0.4,
-    backgroundColor: "black",
+    height: "50%",
+    backgroundColor: "#E5E1DA",
     borderRadius: 10,
     padding: 20,
-    justifyContent: "space-between",
     elevation: 5,
     position: "relative",
   },
@@ -23,16 +20,12 @@ export const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     right: 10,
-    backgroundColor: "red",
+    backgroundColor: "#FF5B5B",
     width: 30,
     height: 30,
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
-  },
-  closeButtonText: {
-    color: "white",
-    fontWeight: "bold",
   },
   loadingContainer: {
     flex: 1,
@@ -42,9 +35,11 @@ export const styles = StyleSheet.create({
   loadingText: {
     color: "#000",
     marginTop: 10,
+    fontFamily: "Verve",
+    fontSize: 16,
   },
   input: {
-    height: 100,
+    minHeight: "85%",
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 8,
@@ -53,5 +48,10 @@ export const styles = StyleSheet.create({
     backgroundColor: "#f9f9f9",
     marginBottom: 20,
     color: "#000",
+    fontFamily: "Verve",
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

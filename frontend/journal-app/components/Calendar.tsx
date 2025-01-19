@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { styles } from "./Calendar.styles";
 import { SENTIMENT_COLORS } from "@/constants/sentimentColors";
 
@@ -7,13 +13,15 @@ interface CalendarProps {
   onDateSelected: (date: string) => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
+export default function Calendar({ onDateSelected }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [monthData, setMonthData] = useState<Record<number, { sentiment: string }>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchMonth();
+    (async () => {
+      await fetchMonth();
+    })();
   }, [currentDate]);
 
   async function fetchMonth() {
@@ -61,16 +69,14 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
   function renderDay(day: number | null, index: string) {
     if (day === null) {
       return (
-        <TouchableOpacity
+        <View
           key={index}
           style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
-        >
-          <Text />
-        </TouchableOpacity>
+        />
       );
     }
     const sentiment = monthData[day]?.sentiment;
-    const backgroundColor = sentiment ? SENTIMENT_COLORS[sentiment] ?? "lightgrey" : "lightgrey";
+    const backgroundColor = sentiment ? SENTIMENT_COLORS[sentiment] : "lightgrey";
     return (
       <TouchableOpacity
         key={index}
@@ -123,22 +129,27 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonRow}>
-        <Button color="#34a899" title="Prev" onPress={handlePreviousMonth} />
+        <TouchableOpacity style={styles.arrowButton} onPress={handlePreviousMonth}>
+          <Ionicons name="chevron-back" size={24} color="#89A8B2" />
+        </TouchableOpacity>
+
         <Text style={styles.header}>
           {currentDate.toLocaleString("default", { month: "long" })} {currentDate.getFullYear()}
         </Text>
-        <Button color="#34a899" title="Next" onPress={handleNextMonth} />
+
+        <TouchableOpacity style={styles.arrowButton} onPress={handleNextMonth}>
+          <Ionicons name="chevron-forward" size={24} color="#89A8B2" />
+        </TouchableOpacity>
       </View>
+
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#34a899" />
-          <Text>Loading...</Text>
+          <ActivityIndicator size="large" color="#89A8B2" />
+          <Text style={styles.loadingText}>Loading...</Text>
         </View>
       ) : (
         renderCalendar()
       )}
     </View>
   );
-};
-
-export default Calendar;
+}

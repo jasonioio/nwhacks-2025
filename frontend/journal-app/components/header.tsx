@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     },
     header: {
         fontSize: 45,
-        fontFamily: 'Abril Fatface'
+        fontFamily: "Verve",
     },
     subheader: {
         fontSize: 20,
