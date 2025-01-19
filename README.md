@@ -39,14 +39,10 @@ BrightPath derives meaningful context from your journal entries to guide you tow
         Express.js
 
     Natural Language Processing:
-        Sentiment Analysis with pre-trained NLP models (e.g., TensorFlow.js or Hugging Face Transformers)
+        OpenRouter
 
     Database:
         MongoDB
-
-    Other Tools:
-        REST API for communication between frontend and backend
-        npm (Node Package Manager)
 
 ## How to Run This Project
 
