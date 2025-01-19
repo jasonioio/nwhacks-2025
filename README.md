@@ -27,22 +27,9 @@ BrightPath derives meaningful context from your journal entries to guide you tow
 
 (Image showcasing the suggestions feature)
 
-## Technologies Used (EDIT LATER)
+## Technologies Used 
 
-    Frontend:
-        React Native
-        JavaScript/TypeScript
-        Expo
-
-    Backend:
-        Node.js
-        Express.js
-
-    Natural Language Processing:
-        OpenRouter
-
-    Database:
-        MongoDB
+<img width="1186" alt="Screenshot 2025-01-19 at 11 47 33 AM" src="https://github.com/user-attachments/assets/b0fd4b15-fb49-4ca1-a267-fbc79950a3a6" />
 
 ## How to Run This Project
 
