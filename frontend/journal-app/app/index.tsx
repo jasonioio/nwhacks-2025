@@ -2,15 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   Text,
   View,
-  Button,
+  TouchableOpacity,
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import Calendar from "@/components/calendar";
-import SubmissionForm from "@/components/submissionForm";
+import Calendar from "@/components/Calendar";
+import SubmissionForm from "@/components/SubmissionForm";
 import Suggestion from "@/components/suggestion";
 import Header from "@/components/header";
-import Legend from "@/components/legend";
+import Legend from "@/components/Legend";
 import { styles } from "./index.styles";
 
 export default function Index() {
@@ -19,7 +19,6 @@ export default function Index() {
   const [selectedDate, setSelectedDate] = useState("");
   const [lifestyleAdvice, setLifestyleAdvice] = useState<string | null>(null);
   const [isFetchingAdvice, setIsFetchingAdvice] = useState(false);
-  const [isRender, setIsRender] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
   async function fetchLifestyleAdvice() {
@@ -52,7 +51,6 @@ export default function Index() {
     setSuggestionVisible(!isSuggestionVisible);
   }
 
-  // Whenever we show the suggestion and have advice, scroll to bottom
   useEffect(() => {
     if (isSuggestionVisible && lifestyleAdvice) {
       setTimeout(() => {
@@ -62,55 +60,44 @@ export default function Index() {
   }, [isSuggestionVisible, lifestyleAdvice]);
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.mainContainer}
-      ref={scrollViewRef}
-    >
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>ThoughtStream 📖</Text>
+    <View style={styles.screenWrapper}>
+      {/* NavBar */}
+      <View style={styles.navBar}>
+        <Text style={styles.navBarTitle}>ThoughtStream 📖</Text>
       </View>
 
-      <Header />
+      <ScrollView contentContainerStyle={styles.mainContainer} ref={scrollViewRef}>
+        <Header />
 
-      <View style={styles.calendarContainer}>
-        <Calendar onDateSelected={onDateSelected} isRender={isRender} />
-      </View>
-
-      <Legend />
-
-      <View style={styles.buttonContainer}>
-        {isFetchingAdvice ? (
-          <View style={styles.loadingButtonContainer}>
-            <ActivityIndicator size="large" color="#34a899" />
-            <Text style={styles.loadingText}>Loading suggestion...</Text>
-          </View>
-        ) : (
-          <Button
-            title={isSuggestionVisible ? "Hide Suggestion" : "View Suggestion"}
-            onPress={toggleSuggestion}
-          />
-        )}
-      </View>
-
-      {isSuggestionVisible && lifestyleAdvice && (
-        <View style={styles.suggestionContainer}>
-          {/*
-            Use a key so that toggling from false→true remounts the component,
-            resetting the typing effect each time.
-          */}
-          <Suggestion
-            data={lifestyleAdvice}
-            key={isSuggestionVisible ? "show" : "hide"}
-          />
+        <View style={styles.calendarContainer}>
+          <Calendar onDateSelected={onDateSelected} />
         </View>
-      )}
 
-      <SubmissionForm
-        visible={isFormVisible}
-        onClose={closeForm}
-        date={selectedDate}
-        handleRender={setIsRender}
-      />
-    </ScrollView>
+        <Legend />
+
+        <View style={styles.buttonContainer}>
+          {isFetchingAdvice ? (
+            <View style={styles.loadingButtonContainer}>
+              <ActivityIndicator size="large" color="#F1F0E8" />
+              <Text style={styles.loadingText}>Loading suggestion...</Text>
+            </View>
+          ) : (
+            <TouchableOpacity onPress={toggleSuggestion} style={styles.roundedButton}>
+              <Text style={styles.roundedButtonText}>
+                {isSuggestionVisible ? "Hide Suggestion" : "View Suggestion"}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {isSuggestionVisible && lifestyleAdvice && (
+          <View style={styles.suggestionContainer}>
+            <Suggestion data={lifestyleAdvice} key={isSuggestionVisible ? "show" : "hide"} />
+          </View>
+        )}
+
+        <SubmissionForm visible={isFormVisible} onClose={closeForm} date={selectedDate} />
+      </ScrollView>
+    </View>
   );
 }

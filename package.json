@@ -5,5 +5,8 @@
     "build:frontend": "npm run build:web --prefix frontend/journal-app",
     "start:backend": "node backend/index.js",
     "start": "npm run build:frontend && npm run start:backend"
+  },
+  "dependencies": {
+    "react-native-vector-icons": "^10.2.0"
   }
 }
