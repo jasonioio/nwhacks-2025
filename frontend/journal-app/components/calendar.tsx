@@ -6,12 +6,12 @@ interface CalendarProps {
 }
 
 const sentimentColors: Record<string, string> = {
-  Joyful: "#FDE2E4",
-  Sad: "#CCD5FF",
-  Productive: "#BFE2CA",
-  Tired: "#FDFDC4",
-  Okay: "#D3E0EA",
-  Angry: "#FFD1D1",
+  Joyful: "#F8B7BB",
+  Sad: "#A2B3FF",
+  Productive: "#9CC3A9",
+  Tired: "#FBF874",
+  Okay: "#A8BCCC",
+  Angry: "#FFA5A5",
 };
 
 const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
