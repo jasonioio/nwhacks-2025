@@ -5,7 +5,6 @@ import {
   Button,
   ScrollView,
   ActivityIndicator,
-  TouchableOpacity,
 } from "react-native";
 import Calendar from "@/components/calendar";
 import SubmissionForm from "@/components/submissionForm";
@@ -36,10 +35,10 @@ export default function Index() {
     }
   }
 
-  const onDateSelected = (date: string) => {
+  function onDateSelected(date: string) {
     setSelectedDate(date);
     setFormVisible(true);
-  };
+  }
 
   function closeForm() {
     setFormVisible(false);
@@ -52,16 +51,20 @@ export default function Index() {
     setSuggestionVisible(!isSuggestionVisible);
   }
 
+  // Whenever we show the suggestion and have advice, scroll to bottom
   useEffect(() => {
     if (isSuggestionVisible && lifestyleAdvice) {
       setTimeout(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
-      }, 300);
+      }, 0);
     }
   }, [isSuggestionVisible, lifestyleAdvice]);
 
   return (
-    <ScrollView contentContainerStyle={styles.mainContainer} ref={scrollViewRef}>
+    <ScrollView
+      contentContainerStyle={styles.mainContainer}
+      ref={scrollViewRef}
+    >
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>ThoughtStream 📖</Text>
       </View>
@@ -90,7 +93,11 @@ export default function Index() {
 
       {isSuggestionVisible && lifestyleAdvice && (
         <View style={styles.suggestionContainer}>
-          <Suggestion data={lifestyleAdvice} />
+          {/*
+            Use a key so that toggling from false→true remounts the component,
+            resetting the typing effect each time.
+          */}
+          <Suggestion data={lifestyleAdvice} key={isSuggestionVisible ? "show" : "hide"} />
         </View>
       )}
 

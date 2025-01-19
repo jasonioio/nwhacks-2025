@@ -1,19 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 interface SuggestionProps {
-  data: string | null;
+  data: string;
 }
 
-const Suggestion: React.FC<SuggestionProps> = ({ data }) => {
+export default function Suggestion({ data }: SuggestionProps) {
+  const [typedText, setTypedText] = useState("");
+
+  useEffect(() => {
+    if (!data) {
+      setTypedText("");
+      return;
+    }
+
+    const cleanString = data.replace(/^\s+/, "").replace(/\s+$/, "");
+    let typedSoFar = "";
+    let i = 0;
+    setTypedText("");
+    const interval = setInterval(() => {
+      if (i < cleanString.length) {
+        typedSoFar += cleanString[i];
+        setTypedText(typedSoFar);
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 25);
+
+    return () => clearInterval(interval);
+  }, [data]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.suggestionText}>
-        {data ?? "No suggestion data found"}
+        {typedText || "No suggestion data found"}
       </Text>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -27,5 +52,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-
-export default Suggestion;
