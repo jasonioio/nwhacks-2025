@@ -1,29 +1,57 @@
-const express = require('express');
-const cors = require('cors');
-const { spawn } = require('child_process');
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const { spawn } = require("child_process");
+
 const app = express();
+const PORT = 3001;
+const HOST = "0.0.0.0"; // Access from any device on your network
+const PYTHON_SCRIPT = "backend/sentiment_analyser.py";
 
 app.use(cors());
 app.use(express.json());
 
-app.post('/analyze', (req, res) => {
-    const text = req.body.text;
-    const pythonProcess = spawn('python', ['backend/main.py', text]);
+function runPythonAnalysis(text) {
+  return new Promise((resolve, reject) => {
+    const python = spawn("python", [PYTHON_SCRIPT, text]);
+    let output = "";
 
-    pythonProcess.stderr.on('data', (data) => {
-        console.error(`Error from Python: ${data}`);
+    python.stdout.on("data", (data) => {
+      output += data.toString();
     });
 
-    pythonProcess.on('close', (code) => {
-        if (code !== 0) {
-            res.status(500).json({ error: 'Python script failed' });
-        } else {
-            res.json({ sentiment: null });
-        }
+    python.stderr.on("data", (err) => {
+      reject(err.toString());
     });
+
+    python.on("close", (code) => {
+      code !== 0
+        ? reject("Python script exited with an error.")
+        : resolve(output.trim());
+    });
+  });
+}
+
+// API endpoint
+app.post("/analyze", async (req, res) => {
+  try {
+    const { text } = req.body;
+    const sentiment = await runPythonAnalysis(text);
+    res.json({ sentiment });
+  } catch (error) {
+    console.error("Error analyzing sentiment:", error);
+    res.status(500).json({ error: "Python script failed" });
+  }
 });
 
-const port = 3001;
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+// Serve the production web build from "dist" in the project root
+app.use(express.static(path.join(__dirname, "../dist")));
+
+// For any other route, serve index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist", "index.html"));
+});
+
+app.listen(PORT, HOST, () => {
+  console.log(`Server running at http://${HOST}:${PORT}`);
 });
