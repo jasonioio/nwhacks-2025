@@ -1,4 +1,4 @@
-# ReflectAI    
+# BrightPath 
 ## A Journey Toward Better Mental and Physical Health
 
 ReflectAI is a mobile journaling app designed to help you reflect on your daily experiences and emotions. By combining the power of sentiment analysis with journaling, ReflectAI provides valuable insights into your mental and emotional well-being, empowering you to take steps toward a healthier life.
