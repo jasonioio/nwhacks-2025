@@ -9,26 +9,27 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
+  ActivityIndicator,
 } from "react-native";
 
 interface SubmissionFormProps {
   visible: boolean;
   onClose: () => void;
-  date: string; // Received from the parent (e.g., today's date or user-chosen date)
+  date: string;
 }
 
 const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date }) => {
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (visible && date) {
-      fetch(`http://localhost:3001/retrieve?date=${date}`)
+      setLoading(true);
+      fetch(`http://10.19.129.35:3001/retrieve?date=${date}`)
         .then((res) => res.json())
-        .then((data) => {
-          if (data?.entry) setText(data.entry);
-          else setText("");
-        })
-        .catch(() => Alert.alert("Error", "Failed to retrieve entry"));
+        .then((data) => setText(data?.entry || ""))
+        .catch(() => Alert.alert("Error", "Failed to retrieve entry"))
+        .finally(() => setLoading(false));
     }
   }, [visible, date]);
 
@@ -38,7 +39,7 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date 
       return;
     }
     try {
-      const response = await fetch("http://localhost:3001/analyze", {
+      const response = await fetch("http://10.19.129.35:3001/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ date, text }),
@@ -67,15 +68,25 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date 
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
-          <TextInput
-            style={styles.input}
-            placeholder="Type your text here..."
-            value={text}
-            onChangeText={setText}
-            multiline
-          />
-          <Button title="Submit" onPress={handleSubmit} />
-          <Button title="Cancel" color="red" onPress={handleClose} />
+
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#fff" />
+              <Text style={styles.loadingText}>Loading...</Text>
+            </View>
+          ) : (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Type your text here..."
+                value={text}
+                onChangeText={setText}
+                multiline
+              />
+              <Button title="Submit" onPress={handleSubmit} />
+              <Button title="Cancel" color="red" onPress={handleClose} />
+            </>
+          )}
         </View>
       </View>
     </Modal>
@@ -123,6 +134,15 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: "white",
     fontWeight: "bold",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    color: "#fff",
+    marginTop: 10,
   },
 });
 
