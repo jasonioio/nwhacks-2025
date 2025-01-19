@@ -1,19 +1,22 @@
 import Calendar from "@/components/calendar";
 import { Text, View } from "react-native";
+import Header from "@/components/header";
+import Legend from "@/components/legend";
 
 export default function Index() {
   return (
     <View
       style={{
-        flex: 1,
+        display: 'flex',
         justifyContent: "center",
-        alignItems: "center",
+        backgroundColor: 'white',
+        padding: '5%',
+        gap: '5%'
       }}
     >
-      {/* Welcome */}
+      <Header/>
       <Calendar />
-      {/* new entry */}
-      {/* past entry?? */}
+      <Legend />
     </View>
   );
 }

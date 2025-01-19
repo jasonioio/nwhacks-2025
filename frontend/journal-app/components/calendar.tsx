@@ -141,8 +141,7 @@ const Calendar = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    flex: 1,
+    paddingVertical: '5%',
     backgroundColor: '#fff',
   },
   header: {
