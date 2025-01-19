@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.post('/analyze', (req, res) => {
     const text = req.body.text;
-    const pythonProcess = spawn('python', ['backend/sentiment_analyser.py', text]);
+    const pythonProcess = spawn('python', ['backend/main.py', text]);
 
     pythonProcess.stderr.on('data', (data) => {
         console.error(`Error from Python: ${data}`);
