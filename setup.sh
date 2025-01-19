@@ -11,5 +11,6 @@ echo "export GOPATH=$HOME/Documents/go" >> .bash_profile
 echo "export PATH=$GOPATH/bin:$GOROOT/bin:$PATH" >> .bash_profile
 
 source ~/.bash_profile
+source ~/.zshrc
 
 go install github.com/desertbit/grml@latest
