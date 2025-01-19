@@ -20,56 +20,58 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async () => {
-      await fetchDataForMonth(currentDate.getFullYear(), currentDate.getMonth());
-    })();
+    fetchMonth();
   }, [currentDate]);
 
-  const fetchDataForMonth = async (year: number, month: number) => {
+  async function fetchMonth() {
     setLoading(true);
+    const year = currentDate.getFullYear();
+    const monthIndex = currentDate.getMonth();
+    const monthParam = String(monthIndex + 1).padStart(2, "0");
     try {
-      const response = await fetch(
-        `http://10.19.129.35:3001/retrieve_month?year=${year}&month=${String(month + 1).padStart(2, "0")}`
-      );
+      const response = await fetch(`http://10.19.129.35:3001/retrieve_month?year=${year}&month=${monthParam}`);
       const data = await response.json();
       const map: Record<number, { sentiment: string }> = {};
-      data.entries?.forEach((doc: any) => {
-        map[doc.day] = { sentiment: doc.sentiment };
-      });
+      if (data.entries && typeof data.entries === "object") {
+        for (const [dayString, sentiment] of Object.entries(data.entries)) {
+          const dayInt = parseInt(dayString, 10);
+          map[dayInt] = { sentiment: sentiment as string };
+        }
+      }
       setMonthData(map);
     } catch {
       setMonthData({});
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const getDaysInMonth = (year: number, month: number) => {
+  function getDaysInMonth(year: number, month: number) {
     return new Date(year, month + 1, 0).getDate();
-  };
+  }
 
-  const getFirstDayNameInMonth = (year: number, month: number) => {
+  function getFirstDayNameInMonth(year: number, month: number) {
     return new Date(year, month, 1).getDay();
-  };
+  }
 
-  const handlePreviousMonth = () => {
+  function handlePreviousMonth() {
     const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
     setCurrentDate(newDate);
-  };
+  }
 
-  const handleNextMonth = () => {
+  function handleNextMonth() {
     const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     setCurrentDate(newDate);
-  };
+  }
 
-  const handleDayPress = (day: number) => {
+  function handleDayPress(day: number) {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
     const dateString = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     onDateSelected(dateString);
-  };
+  }
 
-  const renderDay = (day: number | null, index: string) => {
+  function renderDay(day: number | null, index: string) {
     if (day === null) {
       return (
         <TouchableOpacity
@@ -81,7 +83,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
       );
     }
     const sentiment = monthData[day]?.sentiment;
-    const backgroundColor = sentiment ? sentimentColors[sentiment] || "lightgrey" : "lightgrey";
+    const backgroundColor = sentiment ? sentimentColors[sentiment] ?? "lightgrey" : "lightgrey";
     return (
       <TouchableOpacity
         key={index}
@@ -91,18 +93,20 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
         <Text>{day}</Text>
       </TouchableOpacity>
     );
-  };
+  }
 
-  const renderWeekday = (day: string) => (
-    <View
-      key={day}
-      style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
-    >
-      <Text>{day}</Text>
-    </View>
-  );
+  function renderWeekday(day: string) {
+    return (
+      <View
+        key={day}
+        style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
+      >
+        <Text>{day}</Text>
+      </View>
+    );
+  }
 
-  const renderCalendar = () => {
+  function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const daysInMonth = getDaysInMonth(year, month);
@@ -127,7 +131,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
       }
     }
     return <View style={styles.calendarGrid}>{days}</View>;
-  };
+  }
 
   return (
     <View style={styles.container}>

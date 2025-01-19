@@ -1,3 +1,4 @@
+// backend/index.js
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -42,6 +43,16 @@ function runPythonScript(script, args) {
   });
 }
 
+function parsePythonDict(dictString) {
+  const jsonString = dictString.replace(/'/g, '"');
+  const parsedObject = JSON.parse(jsonString);
+  const result = {};
+  for (const [key, sentiment] of Object.entries(parsedObject)) {
+    result[parseInt(key, 10)] = sentiment;
+  }
+  return result;
+}
+
 app.post("/analyze", async (req, res) => {
   const { date, text } = req.body;
   if (!date || !text?.trim()) {
@@ -74,8 +85,9 @@ app.get("/retrieve_month", async (req, res) => {
     return res.status(400).json({ error: "Missing year or month parameter" });
   }
   try {
-    const data = await runPythonScript(PYTHON_GET_MONTH, [year, month]);
-    res.json({ entries: data });
+    const rawString = await runPythonScript(PYTHON_GET_MONTH, [year, month]);
+    const entries = parsePythonDict(rawString);
+    res.json({ entries });
   } catch {
     res.status(500).json({ error: "Python script failed" });
   }
