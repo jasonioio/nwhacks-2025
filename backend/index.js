@@ -9,6 +9,7 @@ const PORT = 3001;
 const HOST = "0.0.0.0";
 const PYTHON_POST = "backend/post.py";
 const PYTHON_GET = "backend/get.py";
+const PYTHON_GET_MONTH = "backend/get_month.py";
 
 app.use(cors());
 app.use(express.json());
@@ -62,6 +63,19 @@ app.get("/retrieve", async (req, res) => {
   try {
     const data = await runPythonScript(PYTHON_GET, [date]);
     res.json({ entry: data });
+  } catch {
+    res.status(500).json({ error: "Python script failed" });
+  }
+});
+
+app.get("/retrieve_month", async (req, res) => {
+  const { year, month } = req.query;
+  if (!year || !month) {
+    return res.status(400).json({ error: "Missing year or month parameter" });
+  }
+  try {
+    const data = await runPythonScript(PYTHON_GET_MONTH, [year, month]);
+    res.json({ entries: data });
   } catch {
     res.status(500).json({ error: "Python script failed" });
   }

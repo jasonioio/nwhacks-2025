@@ -1,33 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Button, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 
 interface CalendarProps {
   onDateSelected: (date: string) => void;
 }
 
-const fetchMonthData = async (year: number, month: number) => {
-  const exampleData = {
-    1: { sentiment: -1 },
-    5: { sentiment: 1 },
-    10: { sentiment: 0 },
-  };
-  return new Promise((resolve) => setTimeout(() => resolve(exampleData), 500));
+const sentimentColors: Record<string, string> = {
+  Joyful: "#FDE2E4",
+  Sad: "#CCD5FF",
+  Productive: "#BFE2CA",
+  Tired: "#FDFDC4",
+  Okay: "#D3E0EA",
+  Angry: "#FFD1D1",
 };
 
 const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [monthData, setMonthData] = useState<Record<number, { sentiment: number }>>({});
+  const [monthData, setMonthData] = useState<Record<number, { sentiment: string }>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchDataForMonth(currentDate.getFullYear(), currentDate.getMonth());
+    (async () => {
+      await fetchDataForMonth(currentDate.getFullYear(), currentDate.getMonth());
+    })();
   }, [currentDate]);
 
   const fetchDataForMonth = async (year: number, month: number) => {
     setLoading(true);
-    const data: any = await fetchMonthData(year, month);
-    setMonthData(data);
-    setLoading(false);
+    try {
+      const response = await fetch(
+        `http://10.19.129.35:3001/retrieve_month?year=${year}&month=${String(month + 1).padStart(2, "0")}`
+      );
+      const data = await response.json();
+      const map: Record<number, { sentiment: string }> = {};
+      data.entries?.forEach((doc: any) => {
+        map[doc.day] = { sentiment: doc.sentiment };
+      });
+      setMonthData(map);
+    } catch {
+      setMonthData({});
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getDaysInMonth = (year: number, month: number) => {
@@ -56,24 +70,25 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
   };
 
   const renderDay = (day: number | null, index: string) => {
-    const sentiment = day !== null ? monthData[day]?.sentiment : null;
-    let backgroundColor = "#ccc";
-    let borderColor = "#ccc";
-    if (sentiment === -1) backgroundColor = "#ffcccc";
-    if (sentiment === 0) backgroundColor = "#ffffcc";
-    if (sentiment === 1) backgroundColor = "#ccffcc";
     if (day === null) {
-      backgroundColor = "transparent";
-      borderColor = "transparent";
+      return (
+        <TouchableOpacity
+          key={index}
+          style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
+        >
+          <Text />
+        </TouchableOpacity>
+      );
     }
-
+    const sentiment = monthData[day]?.sentiment;
+    const backgroundColor = sentiment ? sentimentColors[sentiment] || "lightgrey" : "lightgrey";
     return (
       <TouchableOpacity
         key={index}
-        style={[styles.day, { backgroundColor, borderColor }]}
-        onPress={() => day && handleDayPress(day)}
+        style={[styles.day, { backgroundColor, borderColor: backgroundColor }]}
+        onPress={() => handleDayPress(day)}
       >
-        <Text>{day || ""}</Text>
+        <Text>{day}</Text>
       </TouchableOpacity>
     );
   };
@@ -123,7 +138,14 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
         </Text>
         <Button color="#34a899" title="Next" onPress={handleNextMonth} />
       </View>
-      {loading ? <Text>Loading...</Text> : renderCalendar()}
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#34a899" />
+          <Text>Loading...</Text>
+        </View>
+      ) : (
+        renderCalendar()
+      )}
     </View>
   );
 };
@@ -160,6 +182,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
+  },
+  loadingContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
