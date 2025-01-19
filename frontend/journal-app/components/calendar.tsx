@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import { SENTIMENT_COLORS } from "@/constants/sentimentColors";
 
 interface CalendarProps {
   onDateSelected: (date: string) => void;
 }
-
-const sentimentColors: Record<string, string> = {
-  Joyful: "#F8B7BB",
-  Sad: "#A2B3FF",
-  Productive: "#9CC3A9",
-  Tired: "#FBF874",
-  Okay: "#A8BCCC",
-  Angry: "#FFA5A5",
-};
 
 const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -29,7 +21,9 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
     const monthIndex = currentDate.getMonth();
     const monthParam = String(monthIndex + 1).padStart(2, "0");
     try {
-      const response = await fetch(`http://10.19.129.35:3001/retrieve_month?year=${year}&month=${monthParam}`);
+      const response = await fetch(
+        `http://10.19.129.35:3001/retrieve_month?year=${year}&month=${monthParam}`
+      );
       const data = await response.json();
       const map: Record<number, { sentiment: string }> = {};
       if (data.entries && typeof data.entries === "object") {
@@ -44,14 +38,6 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
     } finally {
       setLoading(false);
     }
-  }
-
-  function getDaysInMonth(year: number, month: number) {
-    return new Date(year, month + 1, 0).getDate();
-  }
-
-  function getFirstDayNameInMonth(year: number, month: number) {
-    return new Date(year, month, 1).getDay();
   }
 
   function handlePreviousMonth() {
@@ -83,7 +69,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
       );
     }
     const sentiment = monthData[day]?.sentiment;
-    const backgroundColor = sentiment ? sentimentColors[sentiment] ?? "lightgrey" : "lightgrey";
+    const backgroundColor = sentiment ? SENTIMENT_COLORS[sentiment] ?? "lightgrey" : "lightgrey";
     return (
       <TouchableOpacity
         key={index}
@@ -109,8 +95,8 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
   function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    const daysInMonth = getDaysInMonth(year, month);
-    const firstDay = getFirstDayNameInMonth(year, month);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDay = new Date(year, month, 1).getDay();
     const days = [];
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     let nullCount = 0;
