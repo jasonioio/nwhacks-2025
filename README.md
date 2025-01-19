@@ -87,3 +87,6 @@ npm start
 
 ## Video Demo
 https://youtube.com/shorts/booRKIgiIo8?feature=share
+
+## Devpost
+https://devpost.com/software/reflectai-64j25i
