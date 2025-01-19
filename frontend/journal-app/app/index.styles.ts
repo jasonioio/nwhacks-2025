@@ -59,6 +59,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 6,
+    marginTop: -14,
   },
   calendarContainer: {
     marginBottom: 20,

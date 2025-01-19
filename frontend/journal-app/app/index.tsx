@@ -24,6 +24,7 @@ export default function Index() {
   const [lifestyleAdvice, setLifestyleAdvice] = useState<string | null>(null);
   const [isFetchingAdvice, setIsFetchingAdvice] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+  const [isRender, setIsRender] = useState(false);
 
   if (
     Platform.OS === "android" &&
@@ -77,7 +78,10 @@ export default function Index() {
         <Text style={styles.navBarTitle}>BrightPath</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.mainContainer} ref={scrollViewRef}>
+      <ScrollView
+        contentContainerStyle={styles.mainContainer}
+        ref={scrollViewRef}
+      >
         <View style={styles.dayLogoRow}>
           <Header />
           <Image
@@ -87,7 +91,7 @@ export default function Index() {
         </View>
 
         <View style={styles.calendarContainer}>
-          <Calendar onDateSelected={onDateSelected} />
+          <Calendar onDateSelected={onDateSelected} render={isRender} />
         </View>
 
         <Legend />
@@ -99,7 +103,10 @@ export default function Index() {
               <Text style={styles.loadingText}>Loading suggestion...</Text>
             </View>
           ) : (
-            <TouchableOpacity onPress={toggleSuggestion} style={styles.roundedButton}>
+            <TouchableOpacity
+              onPress={toggleSuggestion}
+              style={styles.roundedButton}
+            >
               <Text style={styles.roundedButtonText}>
                 {isSuggestionVisible ? "Hide Suggestion" : "View Suggestion"}
               </Text>
@@ -113,7 +120,12 @@ export default function Index() {
           </View>
         )}
 
-        <SubmissionForm visible={isFormVisible} onClose={closeForm} date={selectedDate} />
+        <SubmissionForm
+          visible={isFormVisible}
+          onClose={closeForm}
+          date={selectedDate}
+          handleRender={setIsRender}
+        />
       </ScrollView>
     </View>
   );
