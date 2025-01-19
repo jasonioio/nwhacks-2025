@@ -80,8 +80,10 @@ const Calendar = () => {
     }
     
     const endPadding = 7 - (days.length % 7);
-    for (let i = 1; i <= endPadding; i++) {
-        days.push(renderDay(null));
+    if (endPadding < 7) {
+        for (let i = 1; i <= endPadding; i++) {
+            days.push(renderDay(null));
+        }
     }
 
     return <View style={styles.calendarGrid}>{days}</View>;
