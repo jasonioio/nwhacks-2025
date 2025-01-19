@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   },
   navBar: {
     width: "100%",
-    paddingVertical: 10,
+    paddingTop: 8,
     backgroundColor: "#B3C8CF",
     alignItems: "center",
     justifyContent: "center",
