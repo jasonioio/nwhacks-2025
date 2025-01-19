@@ -8,6 +8,7 @@ import sys
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument("date_str", metavar="DATE", type=str)
     parser.add_argument("text", metavar="TEXT", type=str)
     return parser.parse_args()
 
@@ -27,11 +28,10 @@ def main():
 
     analyzer = SentimentAnalyzer(secrets.get_secret("OpenAI"))
     sentiment = analyzer.analyze_sentiment(args.text)
-    print(sentiment)
 
     db_key = secrets.get_secret("MongoDB_nwHacks")
     db_manager = DatabaseManager(db_key)
-    db_manager.add_entry("2022-02-22", args.text, sentiment)
+    db_manager.add_entry(args.date_str, args.text, sentiment)
     db_manager.close_connection()
 
 
