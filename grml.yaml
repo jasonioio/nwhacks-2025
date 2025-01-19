@@ -5,6 +5,12 @@ env:
     GOOGLE_APPLICATION_CREDENTIALS: "auth/hackathons-418309-7359e5253826.json"
     PROJECT_ID: "672205156129"
 
+options:
+    model:
+        - neversleep/llama-3-lumimaid-8b:extended
+        - mistralai/codestral-2501
+        - minimax/minimax-01
+
 commands:
     start:
         help: Start the server

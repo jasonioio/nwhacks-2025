@@ -23,10 +23,10 @@ def main():
     validate_text(args.text)
 
     secrets = SecretManager()
-    secrets.init_secret("OpenAI")
+    secrets.init_secret("OpenRouter")
     secrets.init_secret("MongoDB_nwHacks")
 
-    analyzer = SentimentAnalyzer(secrets.get_secret("OpenAI"))
+    analyzer = SentimentAnalyzer(secrets.get_secret("OpenRouter"))
     sentiment = analyzer.analyze_sentiment(args.text)
 
     db_key = secrets.get_secret("MongoDB_nwHacks")

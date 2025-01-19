@@ -76,7 +76,7 @@ Step 3: Start the Application
 Backend
 
 ```bash
-node index.js  
+node main.js  
 ```
 
 Frontend

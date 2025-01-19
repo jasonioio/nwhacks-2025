@@ -1,12 +1,19 @@
 from openai import OpenAI
 
+import os
+
+
 class SentimentAnalyzer:
     def __init__(self, key):
-        self.client = OpenAI(api_key=key)
+        self.model = os.getenv("model")
+        self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=key
+        )
 
     def analyze_sentiment(self, text):
         result = self.client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=self.model,
             messages=[
                 {
                     "role": "system",
