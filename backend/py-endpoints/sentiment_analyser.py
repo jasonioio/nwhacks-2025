@@ -58,7 +58,7 @@ class SentimentAnalyzer:
             }
         ]
         result = self.client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=self.model,
             messages=messages,
             max_tokens=100,
             temperature=0.7
