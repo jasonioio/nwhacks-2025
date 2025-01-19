@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   View,
@@ -14,66 +14,59 @@ import {
 interface SubmissionFormProps {
   visible: boolean;
   onClose: () => void;
+  date: string; // Received from the parent (e.g., today's date or user-chosen date)
 }
 
-const SubmissionForm: React.FC<SubmissionFormProps> = ({
-  visible,
-  onClose,
-}) => {
-  const [text, setText] = useState<string>("");
+const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date }) => {
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    if (visible && date) {
+      fetch(`http://localhost:3001/retrieve?date=${date}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.entry) setText(data.entry);
+          else setText("");
+        })
+        .catch(() => Alert.alert("Error", "Failed to retrieve entry"));
+    }
+  }, [visible, date]);
 
   const handleSubmit = async () => {
     if (!text.trim()) {
-      Alert.alert("Validation Error", "Text input cannot be empty!");
+      Alert.alert("Validation Error", "Text input cannot be empty");
       return;
     }
-
     try {
-      console.log(text);
-      // POST request to analyze sentiment
       const response = await fetch("http://localhost:3001/analyze", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date, text }),
       });
-
-      const result = await response.json();
-
       if (response.ok) {
-        Alert.alert("Sentiment Analysis", `Sentiment: ${result.sentiment}`);
-        setText(""); // Clear the input field
-        onClose(); // Close the modal
+        Alert.alert("Success", "Entry submitted");
+        setText("");
+        onClose();
       } else {
-        Alert.alert("Error", "Failed to analyze sentiment.");
+        Alert.alert("Error", "Submission failed");
       }
-    } catch (error) {
-      Alert.alert("Error", "An error occurred while analyzing the sentiment.");
-      console.error(error);
+    } catch {
+      Alert.alert("Error", "An error occurred during submission");
     }
   };
 
   const handleClose = () => {
-    setText(""); // Clear the input field
-    onClose(); // Close the modal
+    setText("");
+    onClose();
   };
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          {/* Close Button */}
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
-
-          {/* Input Field */}
           <TextInput
             style={styles.input}
             placeholder="Type your text here..."
@@ -81,11 +74,7 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
             onChangeText={setText}
             multiline
           />
-
-          {/* Submit Button */}
           <Button title="Submit" onPress={handleSubmit} />
-
-          {/* Cancel Button */}
           <Button title="Cancel" color="red" onPress={handleClose} />
         </View>
       </View>
@@ -96,19 +85,19 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent black background
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
   modalContainer: {
     width: "80%",
-    height: Dimensions.get("window").height * 0.4, // 40% of the view height
+    height: Dimensions.get("window").height * 0.4,
     backgroundColor: "black",
     borderRadius: 10,
     padding: 20,
     justifyContent: "space-between",
     elevation: 5,
-    position: "relative", // Needed for absolute positioning of the close button
+    position: "relative",
   },
   input: {
     height: 100,

@@ -7,7 +7,8 @@ const { spawn } = require("child_process");
 const app = express();
 const PORT = 3001;
 const HOST = "0.0.0.0";
-const PYTHON_SCRIPT = "backend/main.py";
+const PYTHON_POST = "backend/post.py";
+const PYTHON_GET = "backend/get.py";
 
 app.use(cors());
 app.use(express.json());
@@ -24,34 +25,44 @@ function getLocalIPAddress() {
   return "0.0.0.0";
 }
 
-function runPythonAnalysis(date, text) {
+function runPythonScript(script, args) {
   return new Promise((resolve, reject) => {
-    const python = spawn("python", [PYTHON_SCRIPT, date, text]);
-
+    let output = "";
+    const python = spawn("python", [script, ...args]);
+    python.stdout.on("data", (data) => {
+      output += data.toString();
+    });
     python.stderr.on("data", (err) => {
       reject(err.toString());
     });
-
     python.on("close", (code) => {
-      if (code !== 0) {
-        reject("Python script exited with an error.");
-      } else {
-        resolve();
-      }
+      code !== 0 ? reject("Python script exited with an error.") : resolve(output.trim());
     });
   });
 }
 
-// API endpoint
 app.post("/analyze", async (req, res) => {
-  const { text } = req.body;
-  const date = "2022-02-22";
-
+  const { date, text } = req.body;
+  if (!date || !text?.trim()) {
+    return res.status(400).json({ error: "Missing or invalid date/text" });
+  }
   try {
-    await runPythonAnalysis(date, text);
+    await runPythonScript(PYTHON_POST, [date, text]);
     res.json({ success: true });
-  } catch (error) {
-    console.error("Error analyzing sentiment:", error);
+  } catch {
+    res.status(500).json({ error: "Python script failed" });
+  }
+});
+
+app.get("/retrieve", async (req, res) => {
+  const { date } = req.query;
+  if (!date) {
+    return res.status(400).json({ error: "Missing date parameter" });
+  }
+  try {
+    const data = await runPythonScript(PYTHON_GET, [date]);
+    res.json({ entry: data });
+  } catch {
     res.status(500).json({ error: "Python script failed" });
   }
 });
