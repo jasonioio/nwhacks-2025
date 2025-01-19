@@ -89,6 +89,15 @@ const Calendar = () => {
     return <View style={styles.calendarGrid}>{days}</View>;
   };
 
+  const renderLoading = () => {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  };
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>
@@ -99,7 +108,7 @@ const Calendar = () => {
         <Button title="Next" onPress={handleNextMonth} />
       </View>
       {loading ? (
-        <Text>Loading...</Text>
+        <Text>{renderLoading()}</Text>
       ) : (
         renderCalendar()
       )}
@@ -137,6 +146,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 5,
+  },
+  loadingContainer: {
+    flex: 1, // Ensure the container fills the entire available space
+    justifyContent: 'center', // Center the content vertically
+    alignItems: 'center', // Center the content horizontally
+    width: '100%', // Ensure the container takes the full width of the parent
+  },
+  loadingText: {
+    fontSize: 20,
+    textAlign: 'center', // Ensure the text is centered within its container
   },
 });
 
