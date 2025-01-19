@@ -3,6 +3,8 @@ import { Text, View, Button, StyleSheet, ScrollView } from "react-native";
 import Calendar from "@/components/calendar";
 import SubmissionForm from "./SubmissionForm";
 import Suggestion from "@/components/suggestion";
+import Header from "@/components/header";
+import Legend from "@/components/legend";
 
 export default function Index() {
   const [isFormVisible, setFormVisible] = useState(false);
@@ -25,9 +27,13 @@ export default function Index() {
         <Text style={styles.titleText}>ThoughtStream 📖</Text>
       </View>
 
+      <Header />
+
       <View style={styles.calendarContainer}>
         <Calendar onDateSelected={onDateSelected} />
       </View>
+
+      <Legend />
 
       <View style={styles.buttonContainer}>
         <Button
