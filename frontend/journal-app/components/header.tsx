@@ -27,13 +27,14 @@ const Header = () => {
         <View style = {styles.container}>
             <Text style = {styles.header}>{monthNames[date.getMonth()]} {date.getDate() + affix}, {date.getFullYear()}</Text>
             <Text style = {styles.subheader}>What's the vibe today?</Text>
+            <View style = {styles.hr}></View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingBottom: '8%',
+        paddingBottom: '6%',
         paddingTop: '5%',
     },
     header: {
@@ -43,6 +44,14 @@ const styles = StyleSheet.create({
     subheader: {
         fontSize: 20,
         color: '#666666'
+    },
+    hr: {
+        width: '100%',
+        borderColor: '#666666',
+        borderWidth: 0.5,
+        borderStyle: 'solid',
+        marginHorizontal: 'auto',
+        marginTop: 15
     }
 })
 

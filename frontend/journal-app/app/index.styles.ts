@@ -21,8 +21,17 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonContainer: {
-    marginBottom: 20,
+    marginBottom: 10,
     alignItems: "center",
+    width: '60%',
+    padding: 20,
+    marginHorizontal: 'auto',
+    borderRadius: 8,
+    backgroundColor: 'rgb(52, 168, 153)',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   suggestionContainer: {
     marginTop: 20,

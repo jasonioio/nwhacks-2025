@@ -87,7 +87,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
         key={day}
         style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
       >
-        <Text>{day}</Text>
+        <Text style = {styles.weekdays}>{day}</Text>
       </View>
     );
   }
@@ -120,6 +120,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
   }
 
   return (
+    <>
     <View style={styles.container}>
       <View style={styles.buttonRow}>
         <Button color="#34a899" title="Prev" onPress={handlePreviousMonth} />
@@ -131,12 +132,22 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#34a899" />
-          <Text>Loading...</Text>
+          <Text style = {styles.legendText}>Loading...</Text>
         </View>
       ) : (
         renderCalendar()
       )}
     </View>
+    <View style={styles.legendContainer}>
+          {Object.entries(SENTIMENT_COLORS).map(([sentiment, color]) => (
+            <View key={sentiment} style={styles.sentimentContainer}>
+              <View style={[styles.colorSwatch, { backgroundColor: color }]} />
+              <Text style={styles.legendText}>{sentiment}</Text>
+            </View>
+          ))}
+        </View>  
+    <View style = {styles.hr}></View>
+    </>
   );
 };
 
@@ -144,13 +155,17 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#2D293D",
+    borderRadius: 8,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
   header: {
     fontSize: 24,
     textAlign: "center",
     flex: 1,
     fontWeight: "bold",
+    color: 'white'
   },
   buttonRow: {
     flexDirection: "row",
@@ -162,6 +177,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    color: 'white'
+  },
+  weekdays: {
+    color: 'white',
   },
   day: {
     width: "13%",
@@ -178,6 +197,40 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  legendContainer: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "5%",
+    backgroundColor: '#001',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    paddingVertical: 15,
+  },
+  sentimentContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  colorSwatch: {
+    width: 20,
+    aspectRatio: 1,
+  },
+  legendText: {
+    fontWeight: "bold",
+    color: 'white',
+    fontSize: 12,
+  },
+  hr: {
+    width: '100%',
+    borderColor: '#666666',
+    borderWidth: 0.5,
+    borderStyle: 'solid',
+    marginHorizontal: 'auto',
+    marginTop: 20
+  }
 });
 
 export default Calendar;

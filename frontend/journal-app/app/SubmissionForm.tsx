@@ -26,6 +26,14 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
+
+  function parseNumString(num: string) {
+    return Number.parseInt(num) < 10 ? num[1] : num;
+  }
+
+  const monthNum = parseNumString(date.split('-')[1]);
+  const dayNum = parseNumString(date.split('-')[2])
+
   useEffect(() => {
     if (visible && date) {
       setLoading(true);
@@ -74,10 +82,6 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-            <Text style={styles.closeButtonText}>X</Text>
-          </TouchableOpacity>
-
           {loading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#fff" />
@@ -85,16 +89,24 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
             </View>
           ) : (
             <>
-              <TextInput
-                style={styles.input}
-                placeholder="Type your text here..."
-                value={text}
-                onChangeText={setText}
-                multiline
-              />
-              <Button title="Submit" onPress={handleSubmit} />
-              <View style={styles.cancel}>
-                <Button title="Cancel" color="red" onPress={handleClose} />
+              <Text style = {styles.date}>{monthNum}/{dayNum}</Text>
+              <View style = {styles.inputContainer}>
+                <Text style = {styles.prompt}>What happened today?</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Type your text here..."
+                  value={text}
+                  onChangeText={setText}
+                  multiline
+                />
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity style = {styles.submit} onPress={handleSubmit}>
+                    <Text style = {styles.buttonText}>Submit</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style = {styles.cancel} onPress={handleClose}>
+                    <Text style = {styles.buttonText}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </>
           )}
@@ -106,17 +118,17 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
 
 const styles = StyleSheet.create({
   overlay: {
-    flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
+
   },
   modalContainer: {
-    width: "80%",
-    height: Dimensions.get("window").height * 0.8,
-    backgroundColor: "black",
-    borderRadius: 10,
+    width: "100%",
+    height: Dimensions.get("window").height,
+    backgroundColor: "#2D293D",
     padding: 20,
+    paddingVertical: 70,
     justifyContent: "space-between",
     elevation: 5,
     position: "relative",
@@ -129,7 +141,13 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     backgroundColor: "#f9f9f9",
-    marginBottom: 20,
+    marginVertical : 20,
+    flexGrow: 1
+  },
+  date: {
+    color: 'white',
+    fontSize: 100,
+    fontFamily: 'Abril Fatface'
   },
   closeButton: {
     position: "absolute",
@@ -146,6 +164,9 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  buttonText: {
+    fontWeight: 'bold'
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -155,9 +176,41 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginTop: 10,
   },
-  cancel: {
+  buttonContainer: {
     marginTop: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '5%',
   },
+  inputContainer: {
+    height: '80%',
+  },
+  submit: {
+    backgroundColor: '#A7F0B3',
+    flexGrow: 1,
+    padding: 10,
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderRadius: 4
+  },
+  cancel: {
+    backgroundColor: '#E5B2B2',
+    flexGrow: 1,
+    padding: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderRadius: 4,
+    fontWeight: 'bold'
+  },
+  prompt: {
+    color: 'white',
+    fontFamily: 'Abril Fatface',
+    fontSize: 30,
+    paddingVertical: 5
+  }
 });
 
 export default SubmissionForm;

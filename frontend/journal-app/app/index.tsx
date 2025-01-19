@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Text, View, Button, ScrollView } from "react-native";
+import { Text, View, Button, ScrollView, TouchableOpacity } from "react-native";
 import Calendar from "@/components/calendar";
 import SubmissionForm from "./SubmissionForm";
 import Suggestion from "@/components/suggestion";
@@ -55,14 +55,9 @@ export default function Index() {
         <Calendar onDateSelected={onDateSelected} />
       </View>
 
-      <Legend />
-
-      <View style={styles.buttonContainer}>
-        <Button
-          title={isSuggestionVisible ? "Hide Suggestion" : "View Suggestion"}
-          onPress={toggleSuggestion}
-        />
-      </View>
+      <TouchableOpacity style = {styles.buttonContainer} onPress={toggleSuggestion}>
+        <Text style = {styles.buttonText}>{isSuggestionVisible ? "Hide Suggestion" : "View Suggestion"}</Text>
+      </TouchableOpacity>
 
       {isSuggestionVisible && (
         <View style={styles.suggestionContainer}>

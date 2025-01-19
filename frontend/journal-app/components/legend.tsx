@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: "5%",
+    backgroundColor: '#2D293D'
   },
   legendContainer: {
     display: "flex",
