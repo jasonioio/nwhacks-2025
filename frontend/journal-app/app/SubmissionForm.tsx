@@ -27,6 +27,7 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
     }
 
     try {
+      console.log(text);
       // POST request to analyze sentiment
       const response = await fetch("http://localhost:3001/analyze", {
         method: "POST",
