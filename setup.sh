@@ -1,0 +1,1 @@
+go install github.com/desertbit/grml@latest
