@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Alert,
   Dimensions,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 
 interface SubmissionFormProps {
@@ -34,13 +36,12 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text }), // Send the text to the /analyze endpoint
+        body: JSON.stringify({ text }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        // Display sentiment analysis result
         Alert.alert("Sentiment Analysis", `Sentiment: ${result.sentiment}`);
         setText(""); // Clear the input field
         onClose(); // Close the modal
@@ -53,15 +54,26 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
     }
   };
 
+  const handleClose = () => {
+    setText(""); // Clear the input field
+    onClose(); // Close the modal
+  };
+
   return (
     <Modal
       visible={visible}
       transparent
       animationType="slide"
-      onRequestClose={onClose} // Handles back button press on Android
+      onRequestClose={onClose}
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
+          {/* Close Button */}
+          <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+
+          {/* Input Field */}
           <TextInput
             style={styles.input}
             placeholder="Type your text here..."
@@ -69,8 +81,12 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
             onChangeText={setText}
             multiline
           />
+
+          {/* Submit Button */}
           <Button title="Submit" onPress={handleSubmit} />
-          <Button title="Cancel" color="red" onPress={onClose} />
+
+          {/* Cancel Button */}
+          <Button title="Cancel" color="red" onPress={handleClose} />
         </View>
       </View>
     </Modal>
@@ -92,6 +108,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "space-between",
     elevation: 5,
+    position: "relative", // Needed for absolute positioning of the close button
   },
   input: {
     height: 100,
@@ -102,6 +119,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: "#f9f9f9",
     marginBottom: 20,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    backgroundColor: "red",
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
 
