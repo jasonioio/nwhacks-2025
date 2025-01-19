@@ -18,7 +18,11 @@ interface SubmissionFormProps {
   date: string;
 }
 
-const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date }) => {
+const SubmissionForm: React.FC<SubmissionFormProps> = ({
+  visible,
+  onClose,
+  date,
+}) => {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -62,7 +66,12 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date 
   };
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={handleClose}
+    >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
@@ -84,7 +93,9 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date 
                 multiline
               />
               <Button title="Submit" onPress={handleSubmit} />
-              <Button title="Cancel" color="red" onPress={handleClose} />
+              <View style={styles.cancel}>
+                <Button title="Cancel" color="red" onPress={handleClose} />
+              </View>
             </>
           )}
         </View>
@@ -102,7 +113,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "80%",
-    height: Dimensions.get("window").height * 0.4,
+    height: Dimensions.get("window").height * 0.8,
     backgroundColor: "black",
     borderRadius: 10,
     padding: 20,
@@ -111,7 +122,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   input: {
-    height: 100,
+    height: 400,
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 8,
@@ -122,11 +133,11 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
-    top: 10,
-    right: 10,
+    top: 12,
+    right: 12,
     backgroundColor: "red",
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
@@ -143,6 +154,9 @@ const styles = StyleSheet.create({
   loadingText: {
     color: "#fff",
     marginTop: 10,
+  },
+  cancel: {
+    marginTop: 5,
   },
 });
 

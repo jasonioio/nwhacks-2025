@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Text, View, Button, ScrollView } from "react-native";
 import Calendar from "@/components/calendar";
 import SubmissionForm from "./SubmissionForm";
@@ -24,10 +24,13 @@ export default function Index() {
     }
   }
 
-  function onDateSelected(date: string) {
+  // Ref to the ScrollView
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const onDateSelected = (date: string) => {
     setSelectedDate(date);
     setFormVisible(true);
-  }
+  };
 
   function closeForm() {
     setFormVisible(false);
@@ -67,7 +70,11 @@ export default function Index() {
         </View>
       )}
 
-      <SubmissionForm visible={isFormVisible} onClose={closeForm} date={selectedDate} />
+      <SubmissionForm
+        visible={isFormVisible}
+        onClose={closeForm}
+        date={selectedDate}
+      />
     </ScrollView>
   );
 }
