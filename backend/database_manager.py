@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from datetime import date, timedelta
 
 class DatabaseManager:
     def __init__(self, password: str, db_name: str = "Journal", collection_name: str = "Entries"):
@@ -20,8 +21,20 @@ class DatabaseManager:
 
     def get_entries_for_month(self, year: str, month: str) -> list:
         regex = f"^{year}-{month.zfill(2)}"
-        documents = self.collection.find({"date": {"$regex": regex}})
-        return list(documents)
+        return list(self.collection.find({"date": {"$regex": regex}}))
+
+    def get_last_14_days_entries(self) -> list:
+        today = date.today()
+        result = []
+        for i in range(14):
+            day = today - timedelta(days=i)
+            day_str = day.strftime("%Y-%m-%d")
+            doc = self.collection.find_one({"date": day_str})
+            if doc:
+                result.append({"date": doc["date"], "text": doc["text"], "sentiment": doc["sentiment"]})
+            else:
+                result.append({"date": day_str, "text": "", "sentiment": "No entry"})
+        return result
 
     def close_connection(self) -> None:
         self.client.close()
