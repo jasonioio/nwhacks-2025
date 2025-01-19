@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, ScrollView } from "react-native";
+import { styles } from "./Suggestion.styles";
 
 interface SuggestionProps {
   data: string;
+  scrollViewRef: React.RefObject<ScrollView>;
 }
 
-export default function Suggestion({ data }: SuggestionProps) {
+export default function Suggestion({ data, scrollViewRef }: SuggestionProps) {
   const [typedText, setTypedText] = useState("");
 
   useEffect(() => {
@@ -13,23 +15,27 @@ export default function Suggestion({ data }: SuggestionProps) {
       setTypedText("");
       return;
     }
-
-    const cleanString = data.replace(/^\s+/, "").replace(/\s+$/, "");
+    const cleanString = data.trim();
     let typedSoFar = "";
     let i = 0;
     setTypedText("");
+
     const interval = setInterval(() => {
       if (i < cleanString.length) {
         typedSoFar += cleanString[i];
         setTypedText(typedSoFar);
         i++;
+
+        setTimeout(() => {
+          scrollViewRef.current?.scrollToEnd({ animated: true });
+        }, 50);
       } else {
         clearInterval(interval);
       }
-    }, 25);
+    }, 20);
 
     return () => clearInterval(interval);
-  }, [data]);
+  }, [data, scrollViewRef]);
 
   return (
     <View style={styles.container}>
@@ -39,16 +45,3 @@ export default function Suggestion({ data }: SuggestionProps) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-  },
-  suggestionText: {
-    margin: 20,
-    fontSize: 16,
-    fontStyle: "italic",
-    color: "gray",
-    textAlign: "center",
-  },
-});

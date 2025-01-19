@@ -1,5 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 
+const { width } = Dimensions.get("window");
+
 /*
 Palette:
 BG:       #89A8B2
@@ -8,16 +10,14 @@ Accent2:  #E5E1DA
 WhiteTxt: #F1F0E8
 */
 
-const { width } = Dimensions.get("window");
-
 export const styles = StyleSheet.create({
   screenWrapper: {
     flex: 1,
-    backgroundColor: "#89A8B2", // Main background color
+    backgroundColor: "#89A8B2",
   },
   navBar: {
     width: "100%",
-    paddingVertical: 15,
+    paddingVertical: 10,
     backgroundColor: "#B3C8CF",
     alignItems: "center",
     justifyContent: "center",
@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
   navBarTitle: {
     fontSize: 24,
     fontWeight: "bold",
+    fontFamily: "Verve",
     color: "#F1F0E8",
   },
   mainContainer: {
@@ -38,6 +39,26 @@ export const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingHorizontal: 20,
     paddingVertical: 30,
+  },
+  dayLogoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  dayText: {
+    fontSize: 18,
+    color: "#F1F0E8",
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 6,
   },
   calendarContainer: {
     marginBottom: 20,
@@ -71,7 +92,7 @@ export const styles = StyleSheet.create({
     elevation: 5,
   },
   roundedButton: {
-    backgroundColor: "#E5E1DA", // Accent2
+    backgroundColor: "#E5E1DA",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 25,

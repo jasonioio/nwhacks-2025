@@ -5,11 +5,15 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Image,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from "react-native";
 import Calendar from "@/components/Calendar";
 import SubmissionForm from "@/components/SubmissionForm";
-import Suggestion from "@/components/suggestion";
-import Header from "@/components/header";
+import Suggestion from "@/components/Suggestion";
+import Header from "@/components/Header";
 import Legend from "@/components/Legend";
 import { styles } from "./index.styles";
 
@@ -20,6 +24,13 @@ export default function Index() {
   const [lifestyleAdvice, setLifestyleAdvice] = useState<string | null>(null);
   const [isFetchingAdvice, setIsFetchingAdvice] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+
+  if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+  ) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
 
   async function fetchLifestyleAdvice() {
     if (lifestyleAdvice) return;
@@ -45,6 +56,7 @@ export default function Index() {
   }
 
   async function toggleSuggestion() {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     if (!isSuggestionVisible && !lifestyleAdvice) {
       await fetchLifestyleAdvice();
     }
@@ -62,11 +74,17 @@ export default function Index() {
   return (
     <View style={styles.screenWrapper}>
       <View style={styles.navBar}>
-        <Text style={styles.navBarTitle}>ThoughtStream 📖</Text>
+        <Text style={styles.navBarTitle}>BrightPath</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.mainContainer} ref={scrollViewRef}>
-        <Header />
+        <View style={styles.dayLogoRow}>
+          <Header />
+          <Image
+            source={require("../assets/images/logo.png")}
+            style={styles.logo}
+          />
+        </View>
 
         <View style={styles.calendarContainer}>
           <Calendar onDateSelected={onDateSelected} />
@@ -91,7 +109,7 @@ export default function Index() {
 
         {isSuggestionVisible && lifestyleAdvice && (
           <View style={styles.suggestionContainer}>
-            <Suggestion data={lifestyleAdvice} key={isSuggestionVisible ? "show" : "hide"} />
+            <Suggestion data={lifestyleAdvice} scrollViewRef={scrollViewRef} />
           </View>
         )}
 
