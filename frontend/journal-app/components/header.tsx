@@ -35,7 +35,10 @@ const styles = StyleSheet.create({
     container: {
         paddingBottom: '8%',
         paddingTop: '5%',
+<<<<<<< HEAD
         borderColor: 
+=======
+>>>>>>> 3966f235b13d55796b7034315b84ea992175963a
     },
     header: {
         fontSize: 45,

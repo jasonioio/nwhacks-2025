@@ -1,0 +1,29 @@
+version: 2
+project: nwHacks-2025
+
+env:
+    GOOGLE_APPLICATION_CREDENTIALS: "auth/hackathons-418309-7359e5253826.json"
+    PROJECT_ID: "672205156129"
+
+commands:
+    start:
+        help: Start the server
+        exec: |
+            npm run start
+
+    post:
+        help: post a message to the express server
+        commands:
+            happy:
+                help: post a happy message
+                exec: |
+                    curl -X POST http://localhost:3001/analyze \
+                        -H "Content-Type: application/json" \
+                        -d '{"text": "Today was amazing! I went out with friends, and we laughed and joked all day long." }'
+
+            test:
+                help: post a test message
+                exec: |
+                    curl -X POST http://localhost:3001/analyze \
+                        -H "Content-Type: application/json" \
+                        -d '{"text": "I suck, this sucks, everything sucks" }'

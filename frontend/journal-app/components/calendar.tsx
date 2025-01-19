@@ -1,137 +1,152 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, Text, Button, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 
-// Example data fetching function
-const fetchMonthData = async (year: number, month: number) => {
-  // Simulated data with sentiment values (-1: negative, 0: neutral, 1: positive)
-  const exampleData = {
-    1: { sentiment: -1 }, // Day 1
-    5: { sentiment: 1 },  // Day 5
-    10: { sentiment: 0 }, // Day 10
-    // Add data for other days as needed
-  };
-  return new Promise((resolve) => setTimeout(() => resolve(exampleData), 500));
+interface CalendarProps {
+  onDateSelected: (date: string) => void;
+}
+
+const sentimentColors: Record<string, string> = {
+  Joyful: "#F8B7BB",
+  Sad: "#A2B3FF",
+  Productive: "#9CC3A9",
+  Tired: "#FBF874",
+  Okay: "#A8BCCC",
+  Angry: "#FFA5A5",
 };
 
-const Calendar = () => {
+const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [monthData, setMonthData] = useState<{ [key: number]: { sentiment: number } }>({});
+  const [monthData, setMonthData] = useState<Record<number, { sentiment: string }>>({});
   const [loading, setLoading] = useState(true);
-  const buttonColor = "#34a899";
 
   useEffect(() => {
-    // Fetch data for the current month when the component mounts or currentDate changes
-    fetchDataForMonth(currentDate.getFullYear(), currentDate.getMonth());
+    fetchMonth();
   }, [currentDate]);
 
-  const fetchDataForMonth = async (year: number, month: number) => {
+  async function fetchMonth() {
     setLoading(true);
-    const data: any = await fetchMonthData(year, month);
-    setMonthData(data);
-    setLoading(false);
-  };
+    const year = currentDate.getFullYear();
+    const monthIndex = currentDate.getMonth();
+    const monthParam = String(monthIndex + 1).padStart(2, "0");
+    try {
+      const response = await fetch(`http://10.19.129.35:3001/retrieve_month?year=${year}&month=${monthParam}`);
+      const data = await response.json();
+      const map: Record<number, { sentiment: string }> = {};
+      if (data.entries && typeof data.entries === "object") {
+        for (const [dayString, sentiment] of Object.entries(data.entries)) {
+          const dayInt = parseInt(dayString, 10);
+          map[dayInt] = { sentiment: sentiment as string };
+        }
+      }
+      setMonthData(map);
+    } catch {
+      setMonthData({});
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  const getDaysInMonth = (year: number, month: number) => {
+  function getDaysInMonth(year: number, month: number) {
     return new Date(year, month + 1, 0).getDate();
-  };
+  }
 
-  const getFirstDayNameInMonth = (year: number, month: number) => {
+  function getFirstDayNameInMonth(year: number, month: number) {
     return new Date(year, month, 1).getDay();
   }
 
-  const handlePreviousMonth = () => {
+  function handlePreviousMonth() {
     const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
     setCurrentDate(newDate);
-  };
+  }
 
-  const handleNextMonth = () => {
+  function handleNextMonth() {
     const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     setCurrentDate(newDate);
-  };
+  }
 
-  const renderDay = (day: number | null, index: string) => {
-    const sentiment = day !== null ? monthData[day]?.sentiment : null;
-    let backgroundColor = '#ccc'; // Default color for days without sentiment data
-    let borderColor = '#ccc'; // Default color for days without sentiment data
+  function handleDayPress(day: number) {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
+    const dateString = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    onDateSelected(dateString);
+  }
 
-    if (sentiment === -1) backgroundColor = '#ffcccc'; // Negative: red
-    if (sentiment === 0) backgroundColor = '#ffffcc'; // Neutral: yellow
-    if (sentiment === 1) backgroundColor = '#ccffcc'; // Positive: green
-    if (day === null) { // Empty day
-        backgroundColor = 'transparent';
-        borderColor = 'transparent';
+  function renderDay(day: number | null, index: string) {
+    if (day === null) {
+      return (
+        <TouchableOpacity
+          key={index}
+          style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
+        >
+          <Text />
+        </TouchableOpacity>
+      );
     }
+    const sentiment = monthData[day]?.sentiment;
+    const backgroundColor = sentiment ? sentimentColors[sentiment] ?? "lightgrey" : "lightgrey";
     return (
-      <TouchableOpacity key={index} style={[styles.day, { backgroundColor, borderColor }]}>
+      <TouchableOpacity
+        key={index}
+        style={[styles.day, { backgroundColor, borderColor: backgroundColor }]}
+        onPress={() => handleDayPress(day)}
+      >
         <Text>{day}</Text>
       </TouchableOpacity>
     );
-  };
+  }
 
-  const renderWeekday = (day: string) => {
+  function renderWeekday(day: string) {
     return (
-      <View key={day} style={[styles.day, { backgroundColor: 'transparent', borderColor: 'transparent' }]}>
+      <View
+        key={day}
+        style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
+      >
         <Text>{day}</Text>
       </View>
     );
   }
 
-  const renderCalendar = () => {
+  function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const daysInMonth = getDaysInMonth(year, month);
-    const firstDayNameInMonth = getFirstDayNameInMonth(year, month);    
-    const days = []; // Generate days for the month
-    var nullCount = 0;
+    const firstDay = getFirstDayNameInMonth(year, month);
+    const days = [];
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    let nullCount = 0;
 
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-    dayNames.forEach((dayName) => {
-        days.push(renderWeekday(dayName));
-    });
-
-    for (let i = 1; i <= firstDayNameInMonth; i++) {
-        days.push(renderDay(null, "null" + nullCount));
-        nullCount++;
+    dayNames.forEach((dayName) => days.push(renderWeekday(dayName)));
+    for (let i = 1; i <= firstDay; i++) {
+      days.push(renderDay(null, "null" + nullCount));
+      nullCount++;
     }
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(renderDay(i, i.toString()));
     }
-    
     const endPadding = 7 - (days.length % 7);
     if (endPadding < 7) {
-        for (let i = 1; i <= endPadding; i++) {
-            days.push(renderDay(null, "null" + nullCount));
-            nullCount++;
-        }
+      for (let i = 1; i <= endPadding; i++) {
+        days.push(renderDay(null, "null" + nullCount));
+        nullCount++;
+      }
     }
-
-    return (
-      <View style={styles.calendarGrid}>
-        {days}
-      </View>
-    );
-  };
-
-  const renderLoading = () => {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
-      </View>
-    );
-  };
+    return <View style={styles.calendarGrid}>{days}</View>;
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonRow}>
-        <Button color={buttonColor} title="Prev" onPress={handlePreviousMonth} />
+        <Button color="#34a899" title="Prev" onPress={handlePreviousMonth} />
         <Text style={styles.header}>
-          {currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}
+          {currentDate.toLocaleString("default", { month: "long" })} {currentDate.getFullYear()}
         </Text>
-        <Button color={buttonColor} title="Next" onPress={handleNextMonth} />
+        <Button color="#34a899" title="Next" onPress={handleNextMonth} />
       </View>
       {loading ? (
-        <Text>{renderLoading()}</Text>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#34a899" />
+          <Text>Loading...</Text>
+        </View>
       ) : (
         renderCalendar()
       )}
@@ -141,6 +156,7 @@ const Calendar = () => {
 
 const styles = StyleSheet.create({
   container: {
+<<<<<<< HEAD
     paddingVertical: '5%',
     backgroundColor: '#fff',
   },
@@ -149,37 +165,43 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1, // This will make the text take up all available space
     fontFamily: 'Abril Fatface'
+=======
+    padding: 20,
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  header: {
+    fontSize: 24,
+    textAlign: "center",
+    flex: 1,
+    fontWeight: "bold",
+>>>>>>> 3966f235b13d55796b7034315b84ea992175963a
   },
   buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between', // Space buttons evenly
-    alignItems: 'center', // Vertically align items in the center
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
   calendarGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   day: {
-    width: '13%', // Approximate size to fit 7 days per row
-    aspectRatio: 1, // Make it square
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "13%",
+    aspectRatio: 1,
+    justifyContent: "center",
+    alignItems: "center",
     margin: 2,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
   },
   loadingContainer: {
-    flex: 1, // Ensure the container fills the entire available space
-    justifyContent: 'center', // Center the content vertically
-    alignItems: 'center', // Center the content horizontally
-    width: '100%', // Ensure the container takes the full width of the parent
-  },
-  loadingText: {
-    fontSize: 20,
-    textAlign: 'center', // Ensure the text is centered within its container
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
