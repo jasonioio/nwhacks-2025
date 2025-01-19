@@ -16,11 +16,21 @@ interface SubmissionFormProps {
   visible: boolean;
   onClose: () => void;
   date: string;
+  handleRender: (param: boolean) => void;
 }
 
-const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date }) => {
+const SubmissionForm: React.FC<SubmissionFormProps> = ({
+  visible,
+  onClose,
+  date,
+  handleRender,
+}) => {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const onRender = () => {
+    handleRender(true);
+  };
 
   async function handleSubmit() {
     if (!text.trim()) {
@@ -38,6 +48,7 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date 
         Alert.alert("Success", "Entry submitted");
         setText("");
         onClose();
+        onRender();
       } else {
         Alert.alert("Error", "Submission failed");
       }
@@ -54,7 +65,12 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({ visible, onClose, date 
   }
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={handleClose}
+    >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
