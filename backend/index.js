@@ -1,10 +1,11 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const { spawn } = require("child_process");
 
 const app = express();
 const PORT = 3001;
-const HOST = "0.0.0.0"; // Allows access from any device on your network
+const HOST = "0.0.0.0"; // Access from any device on your network
 const PYTHON_SCRIPT = "backend/sentiment_analyser.py";
 
 app.use(cors());
@@ -31,6 +32,7 @@ function runPythonAnalysis(text) {
   });
 }
 
+// API endpoint
 app.post("/analyze", async (req, res) => {
   try {
     const { text } = req.body;
@@ -40,6 +42,14 @@ app.post("/analyze", async (req, res) => {
     console.error("Error analyzing sentiment:", error);
     res.status(500).json({ error: "Python script failed" });
   }
+});
+
+// Serve the production web build from "dist" in the project root
+app.use(express.static(path.join(__dirname, "../dist")));
+
+// For any other route, serve index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist", "index.html"));
 });
 
 app.listen(PORT, HOST, () => {
