@@ -84,7 +84,7 @@ export const styles = StyleSheet.create({
     elevation: 4,
   },
   roundedButtonText: {
-    color: "#F1F0E8",
+    color: "black",
     fontSize: 16,
     fontWeight: "600",
   },
