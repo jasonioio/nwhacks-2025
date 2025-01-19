@@ -1,33 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet, Alert } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
-const Suggestion: React.FC = () => {
-  const [suggestion, setSuggestion] = useState<string | null>(null);
+interface SuggestionProps {
+  data: string | null;
+}
 
-  useEffect(() => {
-    const fetchSuggestion = async () => {
-      try {
-        // Simulating the API response with a hardcoded suggestion for now
-        const suggestionText =
-          "Based on your activity in the last 30 days, you should go outside and get some fresh air";
-        setSuggestion(suggestionText); // Set suggestion immediately
-      } catch (error) {
-        Alert.alert(
-          "Error",
-          "An error occurred while fetching the suggestion."
-        );
-        console.error(error);
-      }
-    };
-
-    if (!suggestion) {
-      fetchSuggestion(); // Fetch the suggestion only if it's not already set
-    }
-  }, [suggestion]);
-
+const Suggestion: React.FC<SuggestionProps> = ({ data }) => {
   return (
     <View style={styles.container}>
-      {suggestion && <Text style={styles.suggestionText}>{suggestion}</Text>}
+      <Text style={styles.suggestionText}>
+        {data ?? "No suggestion data found"}
+      </Text>
     </View>
   );
 };

@@ -11,6 +11,7 @@ const HOST = "0.0.0.0";
 const PYTHON_POST = "backend/post.py";
 const PYTHON_GET = "backend/get.py";
 const PYTHON_GET_MONTH = "backend/get_month.py";
+const PYTHON_GET_LIFESTYLE = "backend/get_lifestyle_adjustments.py";
 
 app.use(cors());
 app.use(express.json());
@@ -88,6 +89,15 @@ app.get("/retrieve_month", async (req, res) => {
     const rawString = await runPythonScript(PYTHON_GET_MONTH, [year, month]);
     const entries = parsePythonDict(rawString);
     res.json({ entries });
+  } catch {
+    res.status(500).json({ error: "Python script failed" });
+  }
+});
+
+app.get("/lifestyle", async (req, res) => {
+  try {
+    const advice = await runPythonScript(PYTHON_GET_LIFESTYLE, []);
+    res.json({ advice });
   } catch {
     res.status(500).json({ error: "Python script failed" });
   }

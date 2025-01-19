@@ -1,26 +1,45 @@
 import React, { useState } from "react";
-import { Text, View, Button, StyleSheet, ScrollView } from "react-native";
+import { Text, View, Button, ScrollView } from "react-native";
 import Calendar from "@/components/calendar";
 import SubmissionForm from "./SubmissionForm";
 import Suggestion from "@/components/suggestion";
+import { styles } from "./index.styles";
 
 export default function Index() {
   const [isFormVisible, setFormVisible] = useState(false);
   const [isSuggestionVisible, setSuggestionVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
+  const [lifestyleAdvice, setLifestyleAdvice] = useState<string | null>(null);
 
-  const onDateSelected = (date: string) => {
+  async function fetchLifestyleAdvice() {
+    if (lifestyleAdvice) return;
+    try {
+      const response = await fetch("http://10.19.129.35:3001/lifestyle");
+      const data = await response.json();
+      setLifestyleAdvice(data.advice);
+    } catch {
+      setLifestyleAdvice("No data available");
+    }
+  }
+
+  function onDateSelected(date: string) {
     setSelectedDate(date);
     setFormVisible(true);
-  };
+  }
 
-  const closeForm = () => setFormVisible(false);
+  function closeForm() {
+    setFormVisible(false);
+  }
 
-  const toggleSuggestion = () => setSuggestionVisible((prev) => !prev);
+  async function toggleSuggestion() {
+    if (!isSuggestionVisible) {
+      await fetchLifestyleAdvice();
+    }
+    setSuggestionVisible(!isSuggestionVisible);
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.mainContainer}>
-      {/* Custom Title */}
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>ThoughtStream 📖</Text>
       </View>
@@ -38,50 +57,11 @@ export default function Index() {
 
       {isSuggestionVisible && (
         <View style={styles.suggestionContainer}>
-          <Suggestion />
+          <Suggestion data={lifestyleAdvice} />
         </View>
       )}
 
-      <SubmissionForm
-        visible={isFormVisible}
-        onClose={closeForm}
-        date={selectedDate}
-      />
+      <SubmissionForm visible={isFormVisible} onClose={closeForm} date={selectedDate} />
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    flexGrow: 1,
-    justifyContent: "flex-start",
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    backgroundColor: "white",
-  },
-  titleContainer: {
-    marginBottom: 25, // Space between the title and the calendar
-    alignItems: "center", // Center the title
-  },
-  titleText: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#333", // You can change the color as needed
-  },
-  calendarContainer: {
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    marginBottom: 20,
-  },
-  suggestionContainer: {
-    marginTop: 20,
-    padding: 20,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: "#ddd",
-    backgroundColor: "#f9f9f9",
-    width: "80%",
-    alignSelf: "center",
-  },
-});
