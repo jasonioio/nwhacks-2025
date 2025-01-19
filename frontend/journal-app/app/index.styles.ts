@@ -28,12 +28,6 @@ export const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 4,
   },
-  navBarTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    fontFamily: "Verve",
-    color: "#F1F0E8",
-  },
   mainContainer: {
     flexGrow: 1,
     justifyContent: "flex-start",

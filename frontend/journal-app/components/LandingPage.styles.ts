@@ -21,14 +21,14 @@ export const styles = StyleSheet.create({
     transform: [{ translateY: -200 }],
   },
   landingTitle: {
-    fontSize: 48,
-    fontWeight: "bold",
+    fontSize: 75,
     fontFamily: "Verve",
     color: "#F1F0E8",
+    marginBottom: 12,
   },
   landingButton: {
     backgroundColor: "#E5E1DA",
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
     paddingVertical: 10,
     borderRadius: 25,
     alignItems: "center",
