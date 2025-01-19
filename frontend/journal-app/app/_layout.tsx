@@ -6,6 +6,7 @@ import AppLoading from "expo-app-loading";
 export default function Layout() {
   const [fontsLoaded] = useFonts({
     Verve: require("../assets/fonts/Verve.ttf"),
+    Evergarden: require("../assets/fonts/Evergarden-YzaLy.ttf"),
   });
 
   if (!fontsLoaded) {

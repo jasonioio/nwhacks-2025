@@ -35,7 +35,6 @@ export const styles = StyleSheet.create({
   loadingText: {
     color: "#000",
     marginTop: 10,
-    fontFamily: "Verve",
     fontSize: 16,
   },
   input: {
@@ -44,11 +43,11 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     padding: 10,
-    fontSize: 16,
+    fontSize: 20,
     backgroundColor: "#f9f9f9",
     marginBottom: 20,
     color: "#000",
-    fontFamily: "Verve",
+    fontFamily: "Evergarden",
   },
   buttonRow: {
     flexDirection: "row",
