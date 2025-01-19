@@ -60,7 +60,7 @@ Step 2: Install Dependencies
 Frontend Setup
 
 ```bash
-cd frontend  
+cd frontend/journal-app 
 npm install  
 ```
 
