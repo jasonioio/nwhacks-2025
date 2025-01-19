@@ -1,28 +1,26 @@
-import React, {useState} from 'react'
-import {styles} from './LoginForm.styles'
-                
-import {View, Image, Button, TouchableOpacity, Text} from 'react-native'
+import React from "react";
+import { Text, View, TouchableOpacity, ImageBackground } from "react-native";
+import { styles } from "./LandingPage.styles";
 
-
-const LoginForm = ({setIsLoggedIn}) => {
-
-    function onPress(){
-
-    }
-
-    return (
-        <>
-            <View style = {styles.container}>
-                <Image
-                    source={require("../assets/images/logo.png")}
-                    style={styles.logo}
-                />
-                <TouchableOpacity style = {styles.buttonContainer} onPress={() => setIsLoggedIn(val => !val)}>
-                    <Text style = {styles.buttonText}>Get Started</Text>
-                </TouchableOpacity>
-            </View>
-        </>
-    )
+export default function LandingPage({
+  onGetStarted,
+}: {
+  onGetStarted: () => void;
+}) {
+  return (
+    <View style={styles.landingContainer}>
+      <ImageBackground
+        source={require("../assets/landing.gif")}
+        style={styles.landingBackground}
+        resizeMode="cover"
+      >
+        <View style={styles.landingOverlay}>
+          <Text style={styles.landingTitle}>BrightPath</Text>
+          <TouchableOpacity style={styles.landingButton} onPress={onGetStarted}>
+            <Text style={styles.landingButtonText}>Get Started</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+    </View>
+  );
 }
-
-export default LoginForm;

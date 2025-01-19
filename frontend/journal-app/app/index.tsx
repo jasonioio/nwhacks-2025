@@ -15,6 +15,7 @@ import SubmissionForm from "@/components/SubmissionForm";
 import Suggestion from "@/components/Suggestion";
 import Header from "@/components/Header";
 import Legend from "@/components/Legend";
+import LandingPage from "@/components/LandingPage";
 import { styles } from "./index.styles";
 
 export default function Index() {
@@ -25,6 +26,7 @@ export default function Index() {
   const [isFetchingAdvice, setIsFetchingAdvice] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const [isRender, setIsRender] = useState(false);
+  const [LandingPageVisible, setLandingPageVisible] = useState(true); 
 
   if (
     Platform.OS === "android" &&
@@ -72,7 +74,12 @@ export default function Index() {
     }
   }, [isSuggestionVisible, lifestyleAdvice]);
 
+  if (LandingPageVisible) {
+    return <LandingPage onGetStarted={() => setLandingPageVisible(false)} />;
+  }
+
   return (
+
     <View style={styles.screenWrapper}>
       <View style={styles.navBar}>
         <Text style={styles.navBarTitle}>BrightPath</Text>
