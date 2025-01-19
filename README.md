@@ -1,11 +1,11 @@
-# ReflectAI    
+# BrightPath 
 ## A Journey Toward Better Mental and Physical Health
 
-ReflectAI is a mobile journaling app designed to help you reflect on your daily experiences and emotions. By combining the power of sentiment analysis with journaling, ReflectAI provides valuable insights into your mental and emotional well-being, empowering you to take steps toward a healthier life.
+BrightPath is a mobile journaling app designed to help you reflect on your daily experiences and emotions. By combining the power of sentiment analysis with journaling, BrightPath provides valuable insights into your mental and emotional well-being, empowering you to take steps toward a healthier life.
 
-## Why ReflectAI?
+## Why BrightPath?
 
-ReflectAI bridges the gap between mental health awareness and actionable insights. Whether you're looking to track your mood, understand your emotional patterns, or receive tailored suggestions for self-improvement, ReflectAI is your companion in your journey to a healthier mind and body
+BrightPath bridges the gap between mental health awareness and actionable insights. Whether you're looking to track your mood, understand your emotional patterns, or receive tailored suggestions for self-improvement, BrightPath is your companion in your journey to a healthier mind and body
 
 ## Features
 #### 1. Reflect on Your Day
@@ -14,7 +14,7 @@ Record your daily thoughts, emotions, and events in an intuitive and user-friend
 
 #### 2. Sentiment Analysis Calendar
 
-ReflectAI uses sentiment analysis to evaluate the tone of your daily journal entries and visually displays these insights on your calendar for quick reference.
+BrightPath uses sentiment analysis to evaluate the tone of your daily journal entries and visually displays these insights on your calendar for quick reference.
 
 
 (Image showcasing the calendar with sentiment-based highlights)
@@ -22,7 +22,7 @@ ReflectAI uses sentiment analysis to evaluate the tone of your daily journal ent
 #### 3. Personalized Suggestions
 
 Analyze patterns from the past two weeks of entries to gain actionable suggestions for improving your mental and physical health.
-ReflectAI derives meaningful context from your journal entries to guide you toward healthier habits and a more balanced life.
+BrightPath derives meaningful context from your journal entries to guide you toward healthier habits and a more balanced life.
 
 
 (Image showcasing the suggestions feature)
@@ -76,7 +76,7 @@ Step 3: Start the Application
 Backend
 
 ```bash
-node index.js  
+node main.js  
 ```
 
 Frontend
