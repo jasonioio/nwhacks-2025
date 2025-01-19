@@ -46,7 +46,9 @@ export default function SubmissionForm({
 
     (async () => {
       try {
-        const res = await fetch(`http://10.19.129.35:3001/retrieve?date=${date}`);
+        const res = await fetch(
+          `http://10.19.129.35:3001/retrieve?date=${date}`
+        );
         const data = await res.json();
         setText(data.entry || "");
       } catch {
@@ -102,12 +104,7 @@ export default function SubmissionForm({
       animationType="none"
       onRequestClose={handleClose}
     >
-      <Animated.View
-        style={[
-          styles.overlay,
-          { opacity: fadeAnim },
-        ]}
-      >
+      <Animated.View style={[styles.overlay, { opacity: fadeAnim }]}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
             <Ionicons name="close" size={24} color="#F1F0E8" />

@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { styles } from "./Calendar.styles";
 import { SENTIMENT_COLORS } from "@/constants/sentimentColors";
 
 interface CalendarProps {
   onDateSelected: (date: string) => void;
+  render: boolean;
 }
 
-export default function Calendar({ onDateSelected }: CalendarProps) {
+export default function Calendar({ onDateSelected, render }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [monthData, setMonthData] = useState<Record<number, { sentiment: string }>>({});
+  const [monthData, setMonthData] = useState<
+    Record<number, { sentiment: string }>
+  >({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       await fetchMonth();
     })();
-  }, [currentDate]);
+  }, [currentDate, render]);
 
   async function fetchMonth() {
     setLoading(true);
@@ -50,19 +48,29 @@ export default function Calendar({ onDateSelected }: CalendarProps) {
   }
 
   function handlePreviousMonth() {
-    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    const newDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() - 1,
+      1
+    );
     setCurrentDate(newDate);
   }
 
   function handleNextMonth() {
-    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    const newDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      1
+    );
     setCurrentDate(newDate);
   }
 
   function handleDayPress(day: number) {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
-    const dateString = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const dateString = `${year}-${String(month).padStart(2, "0")}-${String(
+      day
+    ).padStart(2, "0")}`;
     onDateSelected(dateString);
   }
 
@@ -71,12 +79,17 @@ export default function Calendar({ onDateSelected }: CalendarProps) {
       return (
         <View
           key={index}
-          style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
+          style={[
+            styles.day,
+            { backgroundColor: "transparent", borderColor: "transparent" },
+          ]}
         />
       );
     }
     const sentiment = monthData[day]?.sentiment;
-    const backgroundColor = sentiment ? SENTIMENT_COLORS[sentiment] : "lightgrey";
+    const backgroundColor = sentiment
+      ? SENTIMENT_COLORS[sentiment]
+      : "lightgrey";
     return (
       <TouchableOpacity
         key={index}
@@ -92,7 +105,10 @@ export default function Calendar({ onDateSelected }: CalendarProps) {
     return (
       <View
         key={day}
-        style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
+        style={[
+          styles.day,
+          { backgroundColor: "transparent", borderColor: "transparent" },
+        ]}
       >
         <Text>{day}</Text>
       </View>
@@ -129,12 +145,16 @@ export default function Calendar({ onDateSelected }: CalendarProps) {
   return (
     <View style={styles.container}>
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.arrowButton} onPress={handlePreviousMonth}>
+        <TouchableOpacity
+          style={styles.arrowButton}
+          onPress={handlePreviousMonth}
+        >
           <Ionicons name="chevron-back" size={24} color="#89A8B2" />
         </TouchableOpacity>
 
         <Text style={styles.header}>
-          {currentDate.toLocaleString("default", { month: "long" })} {currentDate.getFullYear()}
+          {currentDate.toLocaleString("default", { month: "long" })}{" "}
+          {currentDate.getFullYear()}
         </Text>
 
         <TouchableOpacity style={styles.arrowButton} onPress={handleNextMonth}>
