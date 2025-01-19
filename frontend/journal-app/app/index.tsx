@@ -12,6 +12,7 @@ export default function Index() {
   const [isSuggestionVisible, setSuggestionVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [lifestyleAdvice, setLifestyleAdvice] = useState<string | null>(null);
+  const [isRender, setIsRender] = useState(false);
 
   async function fetchLifestyleAdvice() {
     if (lifestyleAdvice) return;
@@ -52,7 +53,7 @@ export default function Index() {
       <Header />
 
       <View style={styles.calendarContainer}>
-        <Calendar onDateSelected={onDateSelected} />
+        <Calendar onDateSelected={onDateSelected} render={isRender} />
       </View>
 
       <Legend />
@@ -74,6 +75,7 @@ export default function Index() {
         visible={isFormVisible}
         onClose={closeForm}
         date={selectedDate}
+        handleRender={setIsRender}
       />
     </ScrollView>
   );

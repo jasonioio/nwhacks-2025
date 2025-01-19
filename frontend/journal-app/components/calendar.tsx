@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { SENTIMENT_COLORS } from "@/constants/sentimentColors";
 
 interface CalendarProps {
   onDateSelected: (date: string) => void;
+  render: boolean;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
+const Calendar: React.FC<CalendarProps> = ({ onDateSelected, render }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [monthData, setMonthData] = useState<Record<number, { sentiment: string }>>({});
+  const [monthData, setMonthData] = useState<
+    Record<number, { sentiment: string }>
+  >({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchMonth();
-  }, [currentDate]);
+  }, [currentDate, render]);
 
   async function fetchMonth() {
     setLoading(true);
@@ -41,19 +51,29 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
   }
 
   function handlePreviousMonth() {
-    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    const newDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() - 1,
+      1
+    );
     setCurrentDate(newDate);
   }
 
   function handleNextMonth() {
-    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    const newDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      1
+    );
     setCurrentDate(newDate);
   }
 
   function handleDayPress(day: number) {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
-    const dateString = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const dateString = `${year}-${String(month).padStart(2, "0")}-${String(
+      day
+    ).padStart(2, "0")}`;
     onDateSelected(dateString);
   }
 
@@ -62,14 +82,19 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
       return (
         <TouchableOpacity
           key={index}
-          style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
+          style={[
+            styles.day,
+            { backgroundColor: "transparent", borderColor: "transparent" },
+          ]}
         >
           <Text />
         </TouchableOpacity>
       );
     }
     const sentiment = monthData[day]?.sentiment;
-    const backgroundColor = sentiment ? SENTIMENT_COLORS[sentiment] ?? "lightgrey" : "lightgrey";
+    const backgroundColor = sentiment
+      ? SENTIMENT_COLORS[sentiment] ?? "lightgrey"
+      : "lightgrey";
     return (
       <TouchableOpacity
         key={index}
@@ -85,7 +110,10 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
     return (
       <View
         key={day}
-        style={[styles.day, { backgroundColor: "transparent", borderColor: "transparent" }]}
+        style={[
+          styles.day,
+          { backgroundColor: "transparent", borderColor: "transparent" },
+        ]}
       >
         <Text>{day}</Text>
       </View>
@@ -124,7 +152,8 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelected }) => {
       <View style={styles.buttonRow}>
         <Button color="#34a899" title="Prev" onPress={handlePreviousMonth} />
         <Text style={styles.header}>
-          {currentDate.toLocaleString("default", { month: "long" })} {currentDate.getFullYear()}
+          {currentDate.toLocaleString("default", { month: "long" })}{" "}
+          {currentDate.getFullYear()}
         </Text>
         <Button color="#34a899" title="Next" onPress={handleNextMonth} />
       </View>

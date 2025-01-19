@@ -16,12 +16,14 @@ interface SubmissionFormProps {
   visible: boolean;
   onClose: () => void;
   date: string;
+  handleRender: (param: boolean) => void;
 }
 
 const SubmissionForm: React.FC<SubmissionFormProps> = ({
   visible,
   onClose,
   date,
+  handleRender,
 }) => {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,6 +38,10 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
         .finally(() => setLoading(false));
     }
   }, [visible, date]);
+
+  const onRender = () => {
+    handleRender(true);
+  };
 
   const handleSubmit = async () => {
     if (!text.trim()) {
@@ -52,6 +58,7 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({
         Alert.alert("Success", "Entry submitted");
         setText("");
         onClose();
+        onRender();
       } else {
         Alert.alert("Error", "Submission failed");
       }
