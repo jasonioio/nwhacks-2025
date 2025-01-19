@@ -19,6 +19,7 @@ export default function Index() {
   const [selectedDate, setSelectedDate] = useState("");
   const [lifestyleAdvice, setLifestyleAdvice] = useState<string | null>(null);
   const [isFetchingAdvice, setIsFetchingAdvice] = useState(false);
+  const [isRender, setIsRender] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
   async function fetchLifestyleAdvice() {
@@ -72,7 +73,7 @@ export default function Index() {
       <Header />
 
       <View style={styles.calendarContainer}>
-        <Calendar onDateSelected={onDateSelected} />
+        <Calendar onDateSelected={onDateSelected} isRender={isRender} />
       </View>
 
       <Legend />
@@ -97,7 +98,10 @@ export default function Index() {
             Use a key so that toggling from false→true remounts the component,
             resetting the typing effect each time.
           */}
-          <Suggestion data={lifestyleAdvice} key={isSuggestionVisible ? "show" : "hide"} />
+          <Suggestion
+            data={lifestyleAdvice}
+            key={isSuggestionVisible ? "show" : "hide"}
+          />
         </View>
       )}
 
@@ -105,6 +109,7 @@ export default function Index() {
         visible={isFormVisible}
         onClose={closeForm}
         date={selectedDate}
+        handleRender={setIsRender}
       />
     </ScrollView>
   );
