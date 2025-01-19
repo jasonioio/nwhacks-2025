@@ -5,5 +5,6 @@ export const styles = StyleSheet.create({
   header: {
     fontSize: 45,
     fontFamily: "Verve",
+    marginLeft: 10,
   },
 });
