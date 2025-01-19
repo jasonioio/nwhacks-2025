@@ -1,0 +1,9 @@
+{
+  "name": "project-root",
+  "private": true,
+  "scripts": {
+    "build:frontend": "npm run build:web --prefix frontend/journal-app",
+    "start:backend": "node backend/index.js",
+    "start": "npm run build:frontend && npm run start:backend"
+  }
+}

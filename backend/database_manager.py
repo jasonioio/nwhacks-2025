@@ -5,10 +5,12 @@ class DatabaseManager:
     A class that manages MongoDB operations for a specified database and collection.
     """
 
-    def __init__(self,
-                 password: str = "mongodb://localhost:27017",
-                 db_name: str = "Journal",
-                 collection_name: str = "Entries"):
+    def __init__(
+            self,
+            password: str,
+            db_name: str = "Journal",
+            collection_name: str = "Entries"
+        ):
         """
         Initialize the DatabaseManager with a MongoDB URI, database name,
         and collection name.

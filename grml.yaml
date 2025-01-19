@@ -9,7 +9,7 @@ commands:
     start:
         help: Start the server
         exec: |
-            node backend/index.js
+            npm run start
 
     post:
         help: post a message to the express server
