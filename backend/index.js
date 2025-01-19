@@ -1,39 +1,47 @@
 const express = require("express");
 const cors = require("cors");
 const { spawn } = require("child_process");
+
 const app = express();
+const PORT = 3001;
+const HOST = "0.0.0.0"; // Allows access from any device on your network
+const PYTHON_SCRIPT = "backend/sentiment_analyser.py";
 
 app.use(cors());
 app.use(express.json());
 
-app.post("/analyze", (req, res) => {
-  const text = req.body.text;
-  const pythonProcess = spawn("python", [
-    "backend/sentiment_analyser.py",
-    text,
-  ]);
+function runPythonAnalysis(text) {
+  return new Promise((resolve, reject) => {
+    const python = spawn("python", [PYTHON_SCRIPT, text]);
+    let output = "";
 
-  let pythonOutput = "";
-  pythonProcess.stdout.on("data", (data) => {
-    pythonOutput += data.toString();
-  });
+    python.stdout.on("data", (data) => {
+      output += data.toString();
+    });
 
-  pythonProcess.stderr.on("data", (data) => {
-    console.error(`Error from Python: ${data}`);
-  });
+    python.stderr.on("data", (err) => {
+      reject(err.toString());
+    });
 
-  pythonProcess.on("close", (code) => {
-    if (code !== 0) {
-      res.status(500).json({ error: "Python script failed" });
-    } else {
-      res.json({ sentiment: pythonOutput.trim() });
-      console.log(`Python script finished with code ${code}`);
-      console.log(`Sentiment: ${pythonOutput}`);
-    }
+    python.on("close", (code) => {
+      code !== 0
+        ? reject("Python script exited with an error.")
+        : resolve(output.trim());
+    });
   });
+}
+
+app.post("/analyze", async (req, res) => {
+  try {
+    const { text } = req.body;
+    const sentiment = await runPythonAnalysis(text);
+    res.json({ sentiment });
+  } catch (error) {
+    console.error("Error analyzing sentiment:", error);
+    res.status(500).json({ error: "Python script failed" });
+  }
 });
 
-const port = 3001;
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Server running at http://${HOST}:${PORT}`);
 });
