@@ -1,21 +1,11 @@
-from secret_manager import SecretManager
 from openai import OpenAI
 
-import argparse
-import sys
-
-
-secret_manager = SecretManager()
-secret_manager.init_secret("OpenAI")
-
-
-class SentimentAnalyser:
-    def __init__(self):
-        key = secret_manager.get_secret("OpenAI")
+class SentimentAnalyzer:
+    def __init__(self, key):
         self.client = OpenAI(api_key=key)
 
-    def analyse_sentiment(self, prompt):
-        response = self.client.chat.completions.create(
+    def analyze_sentiment(self, text):
+        result = self.client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {
@@ -33,43 +23,10 @@ class SentimentAnalyser:
                 },
                 {
                     "role": "user",
-                    "content": prompt
+                    "content": text
                 }
             ],
-
             max_tokens=5,
             temperature=0
         )
-
-        return response.choices[0].message.content
-
-
-def main():
-    parser = argparse.ArgumentParser(
-        description="Analyse the sentiment of the provided text."
-    )
-
-    parser.add_argument(
-        "text",
-        metavar="TEXT",
-        type=str,
-        help="Text to be analysed."
-    )
-
-    args = parser.parse_args()
-    if not args.text.strip():
-        parser.error("No non-whitespace text provided.")
-
-    try:
-        analyser = SentimentAnalyser()
-        result = analyser.analyse_sentiment(args.text)
-        print(result)
-    except Exception as e:
-        print(f"Error occurred during sentiment analysis: {e}", file=sys.stderr)
-        sys.exit(1)
-
-
-
-
-if __name__ == "__main__":
-    main()
+        return result.choices[0].message.content

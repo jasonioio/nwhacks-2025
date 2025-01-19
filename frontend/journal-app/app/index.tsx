@@ -1,26 +1,19 @@
-import React, { useState } from "react";
-import { View, Button, StyleSheet } from "react-native";
-import SubmissionForm from "./SubmissionForm";
+import Calendar from "@/components/calendar";
+import { Text, View } from "react-native";
 
 export default function Index() {
-  const [isFormVisible, setFormVisible] = useState<boolean>(false);
-
-  const openForm = () => setFormVisible(true);
-  const closeForm = () => setFormVisible(false);
-
   return (
-    <View style={styles.container}>
-      <Button title="Open Submission Form" onPress={openForm} />
-      <SubmissionForm visible={isFormVisible} onClose={closeForm} />
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {/* Welcome */}
+      <Calendar />
+      {/* new entry */}
+      {/* past entry?? */}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
-  },
-});
